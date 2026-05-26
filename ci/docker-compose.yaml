@@ -1,0 +1,141 @@
+version: '3'
+
+services:
+  mysql:
+    restart: always
+    privileged: true
+    image: mysql:8.0
+    container_name: mysql8
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+    volumes:
+      - D:/dockerdata/mysql/config:/etc/mysql/conf.d
+      - D:/dockerdata/mysql/data:/var/lib/mysql
+      - D:/dockerdata/mysql/log:/logs
+    environment:
+      MYSQL_ROOT_PASSWORD: 'lookatbar@qq.com'
+      MYSQL_USER: 'lookatbar'
+      MYSQL_PASSWORD: '1'
+      MYSQL_INITDB_SKIP_TZINFO: 'Asia/Shanghai'
+    ports:
+      - 3306:3306
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 384M
+
+
+  nacos:
+    image: nacos/nacos-server:v2.3.0
+    container_name: nacos
+    depends_on:
+      - mysql
+    # Nacos 严格资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '0.6'       # 最大0.6核
+          memory: 800M      # 最大内存800M
+        reservations:
+          cpus: '0.3'
+          memory: 400M
+    environment:
+      MODE: standalone
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_USER: 'lookatbar'
+      MYSQL_SERVICE_PASSWORD: '1'
+      TZ: Asia/Shanghai
+      # JVM 内存参数，和容器内存对齐，防止OOM
+      JVM_XMS: 512m
+      JVM_XMX: 600m
+      JVM_XMN: 256m
+    ports:
+      - "8848:8848"    # 控制台/API端口
+      - "9848:9848"    # gRPC端口（必须）
+      - "9849:9849"    # gRPC端口（必须）
+    restart: always
+
+
+  # 单实例 Redis（最精简、最小资源）
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 64M
+    ports:
+      - "6379:6379"
+    volumes:
+      - D:/dockerdata/redis/data:/data  # 持久化挂载
+    command: redis-server --appendonly yes --appendfsync everysec
+    restart: always
+
+  # ====================== RabbitMQ 单实例（带控制台）
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 320M
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      TZ: Asia/Shanghai
+    volumes:
+      - D:/dockerdata/rabbitmq/data:/var/lib/rabbitmq
+      - D:/dockerdata/rabbitmq/log:/var/log/rabbitmq
+    ports:
+      - "5672:5672"    # 服务连接端口
+      - "15672:15672"  # 控制台Web端口
+    restart: always
+
+  # ===================== MINIO 文件存储（已添加）
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+    volumes:
+      - D:/dockerdata/minio/data:/data       # 数据持久化
+      - D:/dockerdata/minio/config:/root/.minio
+    environment:
+      MINIO_ROOT_USER: minioadmin            # 账号
+      MINIO_ROOT_PASSWORD: minioadmin        # 密码
+      TZ: Asia/Shanghai
+    ports:
+      - "9000:9000"      # API 连接端口
+      - "9001:9001"      # 控制台端口
+    command: server /data --console-address ":9001"
+    restart: always
+
+  scp-web:
+    image: node:18.12 # 使用Node 18.x轻量镜像，适配Vue3项目
+    container_name: web # 容器名称，可自定义
+    ports:
+      - "8280:8000" # 端口映射，本地8280端口映射容器8000端口，冲突可替换本地端口（如8280:8000）
+    volumes:
+      - D:\project\java\scp\SCP-web:/app # 映射本地项目目录到容器内/app目录，替换为实际项目路径
+      - D:\project\java\scp\SCP-web/node_modules:/app/node_modules # 本地node_modules挂载到容器，避免重复安装
+      - D:\project\java\scp\SCP-web/.npm:/root/.npm # 本地npm缓存挂载，加速依赖安装，缓存持久化到本地
+    tty: true # 保持容器后台运行，避免启动后退出
+    command: sh -c "
+        cd /app && 
+        npm config set registry https://registry.npmmirror.com --global && 
+        npm install -g pnpm &&
+        npm install --legacy-peer-deps && 
+        npm run serve
+        " # 容器启动后自动安装依赖、启动项目
+

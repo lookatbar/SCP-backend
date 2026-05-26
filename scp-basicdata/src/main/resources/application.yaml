@@ -1,0 +1,82 @@
+server:
+  port: 8101
+spring:
+  application:
+    name: basicdata-service
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  # 数据源配置（Druid）
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/scp?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: lookatbar
+    password: 1
+    druid:
+      initial-size: 2
+      min-idle: 2
+      max-active: 5
+      max-wait: 6000
+
+  # Redis 配置
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password:
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 5
+          max-idle: 3
+          min-idle: 1
+
+# ==============================
+# Nacos 注册中心 + 配置中心
+# ==============================
+spring.cloud:
+  nacos:
+    discovery:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      namespace: scp
+    config:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      file-extension: yaml
+      namespace: scp
+
+# ==============================
+# MyBatis-Plus 配置
+# ==============================
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+  mapper-locations: classpath:mapper/**/*.xml
+
+# ==============================
+# Spring Security 配置
+# ==============================
+spring.security:
+  filter:
+    order: -100
+
+# ==============================
+# Logging 配置
+# ==============================
+logging:
+  level:
+    com.lookatbar.scp.basicdata: DEBUG
+    org.mybatis: DEBUG

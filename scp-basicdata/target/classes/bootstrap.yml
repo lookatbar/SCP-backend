@@ -1,0 +1,22 @@
+
+spring:
+  application:
+    name: scp-basicdata  # 服务名，对应nacos配置DataId前缀
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        file-extension: yaml
+        namespace: scp
+        # 先加载公共配置
+        shared-configs[0]:
+          data-id: scp-common.yaml
+          group: DEFAULT_GROUP
+          refresh: true
+        # 再加载当前服务私有配置
+        shared-configs[1]:
+          data-id: ${spring.application.name}.yaml
+          group: DEFAULT_GROUP
+          refresh: true

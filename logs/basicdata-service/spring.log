@@ -1,0 +1,157 @@
+15:03:38:031  INFO 7264 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : Starting BasicDataApplication using Java 21.0.9 with PID 7264 (D:\project\java\scp\SCP-backend\scp-basicdata\target\classes started by eeko in D:\project\java\scp\SCP-backend)
+15:03:38:035  INFO 7264 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : The following 1 profile is active: "dev"
+15:03:38:491  WARN 7264 --- [basicdata-service] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [com.lookatbar.scp.basicdata.BasicDataApplication]: 'javax.servlet.ServletContext org.springframework.web.context.WebApplicationContext.getServletContext()'
+15:03:38:514  INFO 7264 --- [basicdata-service] [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+15:03:38:553 ERROR 7264 --- [basicdata-service] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+An attempt was made to call a method that does not exist. The attempt was made from the following location:
+
+    org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition.getMatchOutcome(OnWarDeploymentCondition.java:43)
+
+The following method did not exist:
+
+    'javax.servlet.ServletContext org.springframework.web.context.WebApplicationContext.getServletContext()'
+
+The calling method's class, org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition, was loaded from the following location:
+
+    jar:file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/boot/spring-boot-autoconfigure/2.7.12/spring-boot-autoconfigure-2.7.12.jar!/org/springframework/boot/autoconfigure/condition/OnWarDeploymentCondition.class
+
+The called method's class, org.springframework.web.context.WebApplicationContext, is available from the following locations:
+
+    jar:file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/spring-web/6.1.6/spring-web-6.1.6.jar!/org/springframework/web/context/WebApplicationContext.class
+
+The called method's class hierarchy was loaded from the following locations:
+
+    org.springframework.web.context.WebApplicationContext: file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/spring-web/6.1.6/spring-web-6.1.6.jar
+
+
+Action:
+
+Correct the classpath of your application so that it contains compatible versions of the classes org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition and org.springframework.web.context.WebApplicationContext
+
+15:04:29:869  INFO 7532 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : Starting BasicDataApplication using Java 21.0.9 with PID 7532 (D:\project\java\scp\SCP-backend\scp-basicdata\target\classes started by eeko in D:\project\java\scp\SCP-backend)
+15:04:29:873  INFO 7532 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : The following 1 profile is active: "dev"
+15:04:30:357  WARN 7532 --- [basicdata-service] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [com.lookatbar.scp.basicdata.BasicDataApplication]: 'javax.servlet.ServletContext org.springframework.web.context.WebApplicationContext.getServletContext()'
+15:04:30:380  INFO 7532 --- [basicdata-service] [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+15:04:30:419 ERROR 7532 --- [basicdata-service] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+An attempt was made to call a method that does not exist. The attempt was made from the following location:
+
+    org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition.getMatchOutcome(OnWarDeploymentCondition.java:43)
+
+The following method did not exist:
+
+    'javax.servlet.ServletContext org.springframework.web.context.WebApplicationContext.getServletContext()'
+
+The calling method's class, org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition, was loaded from the following location:
+
+    jar:file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/boot/spring-boot-autoconfigure/2.7.12/spring-boot-autoconfigure-2.7.12.jar!/org/springframework/boot/autoconfigure/condition/OnWarDeploymentCondition.class
+
+The called method's class, org.springframework.web.context.WebApplicationContext, is available from the following locations:
+
+    jar:file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/spring-web/6.1.6/spring-web-6.1.6.jar!/org/springframework/web/context/WebApplicationContext.class
+
+The called method's class hierarchy was loaded from the following locations:
+
+    org.springframework.web.context.WebApplicationContext: file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/spring-web/6.1.6/spring-web-6.1.6.jar
+
+
+Action:
+
+Correct the classpath of your application so that it contains compatible versions of the classes org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition and org.springframework.web.context.WebApplicationContext
+
+15:04:49:324  INFO 5392 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : Starting BasicDataApplication using Java 21.0.9 with PID 5392 (D:\project\java\scp\SCP-backend\scp-basicdata\target\classes started by eeko in D:\project\java\scp\SCP-backend)
+15:04:49:328  INFO 5392 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : The following 1 profile is active: "dev"
+15:04:49:829  WARN 5392 --- [basicdata-service] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [com.lookatbar.scp.basicdata.BasicDataApplication]: 'javax.servlet.ServletContext org.springframework.web.context.WebApplicationContext.getServletContext()'
+15:04:49:851  INFO 5392 --- [basicdata-service] [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+15:04:49:887 ERROR 5392 --- [basicdata-service] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+An attempt was made to call a method that does not exist. The attempt was made from the following location:
+
+    org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition.getMatchOutcome(OnWarDeploymentCondition.java:43)
+
+The following method did not exist:
+
+    'javax.servlet.ServletContext org.springframework.web.context.WebApplicationContext.getServletContext()'
+
+The calling method's class, org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition, was loaded from the following location:
+
+    jar:file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/boot/spring-boot-autoconfigure/2.7.12/spring-boot-autoconfigure-2.7.12.jar!/org/springframework/boot/autoconfigure/condition/OnWarDeploymentCondition.class
+
+The called method's class, org.springframework.web.context.WebApplicationContext, is available from the following locations:
+
+    jar:file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/spring-web/6.1.6/spring-web-6.1.6.jar!/org/springframework/web/context/WebApplicationContext.class
+
+The called method's class hierarchy was loaded from the following locations:
+
+    org.springframework.web.context.WebApplicationContext: file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/spring-web/6.1.6/spring-web-6.1.6.jar
+
+
+Action:
+
+Correct the classpath of your application so that it contains compatible versions of the classes org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition and org.springframework.web.context.WebApplicationContext
+
+15:05:16:802  INFO 8228 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : Starting BasicDataApplication using Java 21.0.9 with PID 8228 (D:\project\java\scp\SCP-backend\scp-basicdata\target\classes started by eeko in D:\project\java\scp\SCP-backend)
+15:05:16:805 DEBUG 8228 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : Running with Spring Boot v3.2.5, Spring v6.1.6
+15:05:16:807  INFO 8228 --- [basicdata-service] [main] c.l.scp.basicdata.BasicDataApplication   : The following 1 profile is active: "dev"
+15:05:17:269  WARN 8228 --- [basicdata-service] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [com.lookatbar.scp.basicdata.BasicDataApplication]: 'javax.servlet.ServletContext org.springframework.web.context.WebApplicationContext.getServletContext()'
+15:05:17:291  INFO 8228 --- [basicdata-service] [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+15:05:17:328 ERROR 8228 --- [basicdata-service] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+An attempt was made to call a method that does not exist. The attempt was made from the following location:
+
+    org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition.getMatchOutcome(OnWarDeploymentCondition.java:43)
+
+The following method did not exist:
+
+    'javax.servlet.ServletContext org.springframework.web.context.WebApplicationContext.getServletContext()'
+
+The calling method's class, org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition, was loaded from the following location:
+
+    jar:file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/boot/spring-boot-autoconfigure/2.7.12/spring-boot-autoconfigure-2.7.12.jar!/org/springframework/boot/autoconfigure/condition/OnWarDeploymentCondition.class
+
+The called method's class, org.springframework.web.context.WebApplicationContext, is available from the following locations:
+
+    jar:file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/spring-web/6.1.6/spring-web-6.1.6.jar!/org/springframework/web/context/WebApplicationContext.class
+
+The called method's class hierarchy was loaded from the following locations:
+
+    org.springframework.web.context.WebApplicationContext: file:/D:/dev/apache-maven-3.9.14/repository/org/springframework/spring-web/6.1.6/spring-web-6.1.6.jar
+
+
+Action:
+
+Correct the classpath of your application so that it contains compatible versions of the classes org.springframework.boot.autoconfigure.condition.OnWarDeploymentCondition and org.springframework.web.context.WebApplicationContext
+
