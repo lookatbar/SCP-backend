@@ -36,7 +36,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     /**
      * 注册权限拦截器
-     * 拦截所有/api/**请求，排除登录和注册接口
+     * 拦截所有/api/**请求，排除登录、注册接口和Swagger文档接口
      *
      * @param registry 拦截器注册器
      */
@@ -44,7 +44,13 @@ public class SecurityConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(permissionInterceptor)
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/users/login", "/api/users/register");
+                .excludePathPatterns(
+                        "/api/users/login", 
+                        "/api/users/register",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/webjars/**"
+                );
     }
 
     /**

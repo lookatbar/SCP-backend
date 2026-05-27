@@ -5,6 +5,9 @@ import com.lookatbar.scp.basicdata.application.dto.RoleCreateDTO;
 import com.lookatbar.scp.basicdata.application.dto.RoleDTO;
 import com.lookatbar.scp.basicdata.application.dto.RoleUpdateDTO;
 import com.lookatbar.scp.basicdata.application.service.RoleApplicationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/roles")
 @RequiredArgsConstructor
+@Tag(name = "角色管理", description = "角色的增删改查、权限分配与角色继承（RBAC3）")
 public class RoleController {
 
     /**
@@ -34,6 +38,7 @@ public class RoleController {
      * @return 创建成功的角色信息
      */
     @PostMapping
+    @Operation(summary = "创建角色", description = "创建新角色，需要提供角色名称和编码")
     public ResponseEntity<RoleDTO> createRole(@Valid @RequestBody RoleCreateDTO dto) {
         RoleDTO role = roleApplicationService.createRole(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(role);
@@ -47,7 +52,8 @@ public class RoleController {
      * @return 更新后的角色信息
      */
     @PutMapping("/{id}")
-    public ResponseEntity<RoleDTO> updateRole(@PathVariable String id, @Valid @RequestBody RoleUpdateDTO dto) {
+    @Operation(summary = "更新角色信息", description = "根据角色ID更新角色的名称、描述、状态等信息")
+    public ResponseEntity<RoleDTO> updateRole(@Parameter(description = "角色ID") @PathVariable String id, @Valid @RequestBody RoleUpdateDTO dto) {
         RoleDTO role = roleApplicationService.updateRole(id, dto);
         return ResponseEntity.ok(role);
     }
@@ -59,7 +65,8 @@ public class RoleController {
      * @return 无内容响应（204）
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRole(@PathVariable String id) {
+    @Operation(summary = "删除角色", description = "根据角色ID删除指定角色")
+    public ResponseEntity<Void> deleteRole(@Parameter(description = "角色ID") @PathVariable String id) {
         roleApplicationService.deleteRole(id);
         return ResponseEntity.noContent().build();
     }
@@ -71,7 +78,8 @@ public class RoleController {
      * @return 角色详细信息，包含权限列表和继承关系
      */
     @GetMapping("/{id}")
-    public ResponseEntity<RoleDTO> getRoleById(@PathVariable String id) {
+    @Operation(summary = "根据ID查询角色", description = "根据角色ID查询角色详细信息，包含权限列表和角色继承关系")
+    public ResponseEntity<RoleDTO> getRoleById(@Parameter(description = "角色ID") @PathVariable String id) {
         RoleDTO role = roleApplicationService.getRoleById(id);
         return ResponseEntity.ok(role);
     }
@@ -82,6 +90,7 @@ public class RoleController {
      * @return 角色列表
      */
     @GetMapping
+    @Operation(summary = "查询所有角色", description = "获取系统中所有角色列表")
     public ResponseEntity<List<RoleDTO>> getAllRoles() {
         List<RoleDTO> roles = roleApplicationService.getAllRoles();
         return ResponseEntity.ok(roles);
@@ -95,7 +104,8 @@ public class RoleController {
      * @return 成功响应（200）
      */
     @PostMapping("/{id}/permissions")
-    public ResponseEntity<Void> assignPermissions(@PathVariable String id, @Valid @RequestBody AssignPermissionDTO dto) {
+    @Operation(summary = "为角色分配权限", description = "为指定角色分配一个或多个权限")
+    public ResponseEntity<Void> assignPermissions(@Parameter(description = "角色ID") @PathVariable String id, @Valid @RequestBody AssignPermissionDTO dto) {
         roleApplicationService.assignPermissions(id, dto);
         return ResponseEntity.ok().build();
     }
@@ -108,7 +118,8 @@ public class RoleController {
      * @return 成功响应（200）
      */
     @DeleteMapping("/{roleId}/permissions/{permissionId}")
-    public ResponseEntity<Void> revokePermission(@PathVariable String roleId, @PathVariable String permissionId) {
+    @Operation(summary = "撤销角色的指定权限", description = "从角色中移除指定的权限")
+    public ResponseEntity<Void> revokePermission(@Parameter(description = "角色ID") @PathVariable String roleId, @Parameter(description = "权限ID") @PathVariable String permissionId) {
         roleApplicationService.revokePermission(roleId, permissionId);
         return ResponseEntity.ok().build();
     }
@@ -122,7 +133,8 @@ public class RoleController {
      * @return 成功响应（200）
      */
     @PostMapping("/inherit")
-    public ResponseEntity<Void> inheritRole(@RequestParam String parentRoleId, @RequestParam String childRoleId) {
+    @Operation(summary = "设置角色继承关系", description = "建立角色继承关系，子角色将继承父角色的所有权限（RBAC3特性）")
+    public ResponseEntity<Void> inheritRole(@Parameter(description = "父角色ID") @RequestParam String parentRoleId, @Parameter(description = "子角色ID") @RequestParam String childRoleId) {
         roleApplicationService.inheritRole(parentRoleId, childRoleId);
         return ResponseEntity.ok().build();
     }
@@ -135,7 +147,8 @@ public class RoleController {
      * @return 成功响应（200）
      */
     @DeleteMapping("/inherit")
-    public ResponseEntity<Void> removeInheritance(@RequestParam String parentRoleId, @RequestParam String childRoleId) {
+    @Operation(summary = "移除角色继承关系", description = "移除已建立的角色继承关系")
+    public ResponseEntity<Void> removeInheritance(@Parameter(description = "父角色ID") @RequestParam String parentRoleId, @Parameter(description = "子角色ID") @RequestParam String childRoleId) {
         roleApplicationService.removeInheritance(parentRoleId, childRoleId);
         return ResponseEntity.ok().build();
     }
@@ -148,7 +161,8 @@ public class RoleController {
      * @return 是否具有该权限
      */
     @GetMapping("/{id}/permissions/check")
-    public ResponseEntity<Boolean> checkPermission(@PathVariable String id, @RequestParam String permissionCode) {
+    @Operation(summary = "检查角色是否具有指定权限", description = "检查角色是否具有指定的权限编码（包含继承的权限）")
+    public ResponseEntity<Boolean> checkPermission(@Parameter(description = "角色ID") @PathVariable String id, @Parameter(description = "权限编码") @RequestParam String permissionCode) {
         boolean hasPermission = roleApplicationService.hasPermission(id, permissionCode);
         return ResponseEntity.ok(hasPermission);
     }
