@@ -152,4 +152,13 @@ public class User {
     public void disable() {
         this.status = UserStatus.DISABLED;
     }
+
+    /**
+     * 判断用户是否启用
+     *
+     * @return 是否启用
+     */
+    public boolean isEnabled() {
+        return this.status != null && this.status == UserStatus.ENABLED;
+    }
 }

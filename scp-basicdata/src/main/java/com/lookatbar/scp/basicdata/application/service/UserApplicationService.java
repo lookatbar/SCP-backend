@@ -4,9 +4,12 @@ import com.lookatbar.scp.basicdata.application.assembler.PermissionAssembler;
 import com.lookatbar.scp.basicdata.application.assembler.RoleAssembler;
 import com.lookatbar.scp.basicdata.application.assembler.UserAssembler;
 import com.lookatbar.scp.basicdata.application.dto.*;
+import com.lookatbar.scp.basicdata.domain.model.permission.Permission;
+import com.lookatbar.scp.basicdata.domain.model.role.Role;
 import com.lookatbar.scp.basicdata.domain.model.user.User;
 import com.lookatbar.scp.basicdata.domain.repository.UserRepository;
 import com.lookatbar.scp.basicdata.domain.service.UserDomainService;
+import com.lookatbar.scp.basicdata.infrastructure.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,6 +55,11 @@ public class UserApplicationService {
      * 密码编码器，用于密码加密
      */
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * JWT工具类，用于生成和解析JWT令牌
+     */
+    private final JwtUtil jwtUtil;
 
     /**
      * 创建用户
@@ -158,5 +166,55 @@ public class UserApplicationService {
      */
     public boolean hasPermission(String userId, String permissionCode) {
         return userDomainService.hasPermission(userId, permissionCode);
+    }
+
+    /**
+     * 用户登录
+     * 
+     * @param dto 登录请求DTO，包含用户名和密码
+     * @return 登录响应DTO，包含用户信息和JWT令牌
+     */
+    public LoginResponseDTO login(LoginDTO dto) {
+        // 根据用户名查询用户
+        User user = userRepository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("用户名或密码错误"));
+        
+        // 验证密码
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("用户名或密码错误");
+        }
+        
+        // 检查用户状态
+        if (!user.isEnabled()) {
+            throw new IllegalArgumentException("用户已被禁用");
+        }
+        
+        // 获取用户角色列表
+        List<Role> roles = userDomainService.getUserRoles(user.getId());
+        List<String> roleCodes = roles.stream()
+                .map(Role::getCode)
+                .collect(Collectors.toList());
+        
+        // 获取用户权限列表
+        List<Permission> permissions = userDomainService.getUserPermissions(user.getId());
+        List<String> permissionCodes = permissions.stream()
+                .map(Permission::getCode)
+                .collect(Collectors.toList());
+        
+        // 生成JWT令牌
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+        
+        // 构建登录响应
+        return LoginResponseDTO.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .realName(user.getRealName())
+                .accessToken(token)
+                .tokenType("Bearer")
+                .expiresIn(jwtUtil.getExpireSeconds())
+                .expiresAt(jwtUtil.getExpirationTime(token))
+                .roles(roleCodes)
+                .permissions(permissionCodes)
+                .build();
     }
 }

@@ -1,6 +1,8 @@
 package com.lookatbar.scp.basicdata.api.controller;
 
 import com.lookatbar.scp.basicdata.application.dto.AssignRoleDTO;
+import com.lookatbar.scp.basicdata.application.dto.LoginDTO;
+import com.lookatbar.scp.basicdata.application.dto.LoginResponseDTO;
 import com.lookatbar.scp.basicdata.application.dto.UserCreateDTO;
 import com.lookatbar.scp.basicdata.application.dto.UserDTO;
 import com.lookatbar.scp.basicdata.application.dto.UserUpdateDTO;
@@ -30,6 +32,32 @@ public class UserController {
      * 用户应用服务
      */
     private final UserApplicationService userApplicationService;
+
+    /**
+     * 用户登录
+     * 
+     * @param dto 登录请求DTO，包含用户名和密码
+     * @return 登录响应，包含用户信息和JWT令牌
+     */
+    @PostMapping("/login")
+    @Operation(summary = "用户登录", description = "用户登录接口，验证用户名和密码，返回JWT令牌")
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginDTO dto) {
+        LoginResponseDTO response = userApplicationService.login(dto);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 用户注册
+     * 
+     * @param dto 用户创建请求DTO，包含用户名、密码、邮箱等信息
+     * @return 创建成功的用户信息
+     */
+    @PostMapping("/register")
+    @Operation(summary = "用户注册", description = "用户注册接口，创建新用户账户")
+    public ResponseEntity<UserDTO> register(@Valid @RequestBody UserCreateDTO dto) {
+        UserDTO user = userApplicationService.createUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
 
     /**
      * 创建用户

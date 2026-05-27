@@ -1,5 +1,6 @@
 package com.lookatbar.scp.basicdata.domain.service;
 
+import com.lookatbar.scp.basicdata.domain.model.permission.Permission;
 import com.lookatbar.scp.basicdata.domain.model.role.Role;
 import com.lookatbar.scp.basicdata.domain.model.user.User;
 import com.lookatbar.scp.basicdata.domain.repository.PermissionRepository;
@@ -156,5 +157,15 @@ public class UserDomainService {
      */
     public List<Role> getUserRoles(String userId) {
         return roleRepository.findByUserId(userId);
+    }
+
+    /**
+     * 获取用户的权限列表（含继承权限）
+     * 
+     * @param userId 用户ID
+     * @return 权限列表
+     */
+    public List<Permission> getUserPermissions(String userId) {
+        return permissionRepository.findByUserId(userId);
     }
 }
