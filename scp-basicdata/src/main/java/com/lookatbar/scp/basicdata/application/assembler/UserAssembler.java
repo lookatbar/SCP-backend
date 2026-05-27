@@ -21,7 +21,7 @@ public class UserAssembler {
                 .build();
     }
 
-    public User toDomain(Long id, UserUpdateDTO dto) {
+    public User toDomain(String id, UserUpdateDTO dto) {
         User user = User.builder()
                 .id(id)
                 .email(dto.getEmail())
@@ -49,8 +49,8 @@ public class UserAssembler {
                 .realName(user.getRealName())
                 .status(user.getStatus() != null ? user.getStatus().getCode() : null)
                 .statusDescription(user.getStatus() != null ? user.getStatus().getDescription() : null)
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
+                .createdAt(user.getCreatedTime())
+                .updatedAt(user.getModifiedTime())
                 .build();
     }
 }

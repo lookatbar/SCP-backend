@@ -14,12 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public class PermissionDTO {
 
-    private Long id;
+    private String id;
     private String name;
     private String code;
     private Integer type;
     private String typeDescription;
-    private Long parentId;
+    private String parentId;
     private String path;
     private String method;
     private String description;

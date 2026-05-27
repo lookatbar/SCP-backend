@@ -29,4 +29,5 @@ public enum PermissionStatus {
         }
         throw new IllegalArgumentException("Invalid permission status code: " + code);
     }
+
 }

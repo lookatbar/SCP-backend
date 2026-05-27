@@ -16,7 +16,7 @@ public class PermissionAssembler {
                 .name(dto.getName())
                 .code(dto.getCode())
                 .type(dto.getType() != null ? PermissionType.fromCode(dto.getType()) : PermissionType.API)
-                .parentId(dto.getParentId() != null ? dto.getParentId() : 0L)
+                .parentId(dto.getParentId())
                 .path(dto.getPath())
                 .method(dto.getMethod())
                 .description(dto.getDescription())
@@ -25,7 +25,7 @@ public class PermissionAssembler {
                 .build();
     }
 
-    public Permission toDomain(Long id, PermissionUpdateDTO dto) {
+    public Permission toDomain(String id, PermissionUpdateDTO dto) {
         Permission permission = Permission.builder()
                 .id(id)
                 .parentId(dto.getParentId())
@@ -68,8 +68,8 @@ public class PermissionAssembler {
                 .sortOrder(permission.getSortOrder())
                 .status(permission.getStatus() != null ? permission.getStatus().getCode() : null)
                 .statusDescription(permission.getStatus() != null ? permission.getStatus().getDescription() : null)
-                .createdAt(permission.getCreatedAt())
-                .updatedAt(permission.getUpdatedAt())
+                .createdAt(permission.getCreatedTime())
+                .updatedAt(permission.getModifiedTime())
                 .build();
     }
 }

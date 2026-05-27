@@ -1,5 +1,8 @@
 package com.lookatbar.scp.basicdata.domain.model.permission;
 
+import lombok.Getter;
+
+@Getter
 public enum PermissionType {
 
     MENU(1, "菜单"),
@@ -14,14 +17,6 @@ public enum PermissionType {
         this.description = description;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     public static PermissionType fromCode(int code) {
         for (PermissionType type : values()) {
             if (type.code == code) {
@@ -30,4 +25,5 @@ public enum PermissionType {
         }
         throw new IllegalArgumentException("Invalid permission type code: " + code);
     }
+
 }

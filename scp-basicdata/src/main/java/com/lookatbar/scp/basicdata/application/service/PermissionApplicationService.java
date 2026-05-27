@@ -29,18 +29,18 @@ public class PermissionApplicationService {
     }
 
     @Transactional
-    public PermissionDTO updatePermission(Long id, PermissionUpdateDTO dto) {
+    public PermissionDTO updatePermission(String id, PermissionUpdateDTO dto) {
         Permission permission = permissionAssembler.toDomain(id, dto);
         Permission updatedPermission = permissionRepository.save(permission);
         return permissionAssembler.toDTO(updatedPermission);
     }
 
     @Transactional
-    public void deletePermission(Long id) {
+    public void deletePermission(String id) {
         permissionRepository.deleteById(id);
     }
 
-    public PermissionDTO getPermissionById(Long id) {
+    public PermissionDTO getPermissionById(String id) {
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("权限不存在"));
         return permissionAssembler.toDTO(permission);
@@ -58,13 +58,13 @@ public class PermissionApplicationService {
                 .collect(Collectors.toList());
     }
 
-    public List<PermissionDTO> getPermissionsByRoleId(Long roleId) {
+    public List<PermissionDTO> getPermissionsByRoleId(String roleId) {
         return permissionRepository.findByRoleId(roleId).stream()
                 .map(permissionAssembler::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<PermissionDTO> getPermissionsByUserId(Long userId) {
+    public List<PermissionDTO> getPermissionsByUserId(String userId) {
         return permissionRepository.findByUserId(userId).stream()
                 .map(permissionAssembler::toDTO)
                 .collect(Collectors.toList());
@@ -73,7 +73,7 @@ public class PermissionApplicationService {
     public List<PermissionDTO> getPermissionTree() {
         List<Permission> allPermissions = permissionRepository.findAll();
         List<Permission> rootPermissions = allPermissions.stream()
-                .filter(p -> p.getParentId() == null || p.getParentId() == 0)
+                .filter(p -> p.getParentId() == null || p.getParentId().isEmpty())
                 .collect(Collectors.toList());
 
         return buildPermissionTree(rootPermissions, allPermissions);

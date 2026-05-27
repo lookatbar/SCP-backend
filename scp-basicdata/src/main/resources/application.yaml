@@ -23,6 +23,15 @@ spring:
       max-active: 5
       max-wait: 6000
 
+  # 数据库初始化配置
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      continue-on-error: false
+      schema-locations: classpath:db/schema.sql
+      # data-locations: classpath:db/data.sql
+
   # Redis 配置
   data:
     redis:

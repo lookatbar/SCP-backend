@@ -15,5 +15,5 @@ import java.util.List;
 public class AssignRoleDTO {
 
     @NotEmpty(message = "角色ID列表不能为空")
-    private List<Long> roleIds;
+    private List<String> roleIds;
 }

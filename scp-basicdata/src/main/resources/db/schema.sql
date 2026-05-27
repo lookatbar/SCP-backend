@@ -121,31 +121,3 @@ CREATE TABLE IF NOT EXISTS `basicdata_role_mutually_exclusive` (
     INDEX `idx_role_2` (`role_id_2`),
     UNIQUE KEY `uk_mutual_exclusive` (`role_id_1`, `role_id_2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色互斥约束表';
-
--- 初始化数据（使用 UUID）
-INSERT INTO `basicdata_role` (`id`, `name`, `code`, `description`, `created_by`, `modified_by`) VALUES
-('00000000-0000-0000-0000-000000000001', '超级管理员', 'SUPER_ADMIN', '拥有所有权限', 'system', 'system'),
-('00000000-0000-0000-0000-000000000002', '管理员', 'ADMIN', '拥有管理权限', 'system', 'system'),
-('00000000-0000-0000-0000-000000000003', '普通用户', 'USER', '拥有基础权限', 'system', 'system');
-
-INSERT INTO `basicdata_permission` (`id`, `name`, `code`, `type`, `parent_id`, `path`, `method`, `description`, `created_by`, `modified_by`) VALUES
-('00000000-0000-0000-0000-000000000101', '系统管理', 'sys:manage', 1, NULL, '/sys', NULL, '系统管理菜单', 'system', 'system'),
-('00000000-0000-0000-0000-000000000102', '用户管理', 'sys:user:manage', 1, '00000000-0000-0000-0000-000000000101', '/sys/users', NULL, '用户管理菜单', 'system', 'system'),
-('00000000-0000-0000-0000-000000000103', '用户查询', 'sys:user:query', 2, '00000000-0000-0000-0000-000000000102', '/api/users', 'GET', '查询用户', 'system', 'system'),
-('00000000-0000-0000-0000-000000000104', '用户创建', 'sys:user:create', 2, '00000000-0000-0000-0000-000000000102', '/api/users', 'POST', '创建用户', 'system', 'system'),
-('00000000-0000-0000-0000-000000000105', '用户更新', 'sys:user:update', 2, '00000000-0000-0000-0000-000000000102', '/api/users/{id}', 'PUT', '更新用户', 'system', 'system'),
-('00000000-0000-0000-0000-000000000106', '用户删除', 'sys:user:delete', 2, '00000000-0000-0000-0000-000000000102', '/api/users/{id}', 'DELETE', '删除用户', 'system', 'system'),
-('00000000-0000-0000-0000-000000000107', '角色管理', 'sys:role:manage', 1, '00000000-0000-0000-0000-000000000101', '/sys/roles', NULL, '角色管理菜单', 'system', 'system'),
-('00000000-0000-0000-0000-000000000108', '角色查询', 'sys:role:query', 2, '00000000-0000-0000-0000-000000000107', '/api/roles', 'GET', '查询角色', 'system', 'system'),
-('00000000-0000-0000-0000-000000000109', '角色创建', 'sys:role:create', 2, '00000000-0000-0000-0000-000000000107', '/api/roles', 'POST', '创建角色', 'system', 'system'),
-('00000000-0000-0000-0000-000000000110', '角色更新', 'sys:role:update', 2, '00000000-0000-0000-0000-000000000107', '/api/roles/{id}', 'PUT', '更新角色', 'system', 'system'),
-('00000000-0000-0000-0000-000000000111', '角色删除', 'sys:role:delete', 2, '00000000-0000-0000-0000-000000000107', '/api/roles/{id}', 'DELETE', '删除角色', 'system', 'system'),
-('00000000-0000-0000-0000-000000000112', '权限管理', 'sys:permission:manage', 1, '00000000-0000-0000-0000-000000000101', '/sys/permissions', NULL, '权限管理菜单', 'system', 'system'),
-('00000000-0000-0000-0000-000000000113', '权限查询', 'sys:permission:query', 2, '00000000-0000-0000-0000-000000000112', '/api/permissions', 'GET', '查询权限', 'system', 'system'),
-('00000000-0000-0000-0000-000000000114', '权限创建', 'sys:permission:create', 2, '00000000-0000-0000-0000-000000000112', '/api/permissions', 'POST', '创建权限', 'system', 'system'),
-('00000000-0000-0000-0000-000000000115', '权限更新', 'sys:permission:update', 2, '00000000-0000-0000-0000-000000000112', '/api/permissions/{id}', 'PUT', '更新权限', 'system', 'system'),
-('00000000-0000-0000-0000-000000000116', '权限删除', 'sys:permission:delete', 2, '00000000-0000-0000-0000-000000000112', '/api/permissions/{id}', 'DELETE', '删除权限', 'system', 'system');
-
--- 超级管理员拥有所有权限
-INSERT INTO `basicdata_role_permission` (`id`, `role_id`, `permission_id`, `created_by`, `modified_by`)
-SELECT UUID(), '00000000-0000-0000-0000-000000000001', `id`, 'system', 'system' FROM `basicdata_permission`;

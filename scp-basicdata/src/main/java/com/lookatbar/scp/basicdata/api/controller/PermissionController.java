@@ -26,19 +26,19 @@ public class PermissionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PermissionDTO> updatePermission(@PathVariable Long id, @Valid @RequestBody PermissionUpdateDTO dto) {
+    public ResponseEntity<PermissionDTO> updatePermission(@PathVariable String id, @Valid @RequestBody PermissionUpdateDTO dto) {
         PermissionDTO permission = permissionApplicationService.updatePermission(id, dto);
         return ResponseEntity.ok(permission);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePermission(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePermission(@PathVariable String id) {
         permissionApplicationService.deletePermission(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PermissionDTO> getPermissionById(@PathVariable Long id) {
+    public ResponseEntity<PermissionDTO> getPermissionById(@PathVariable String id) {
         PermissionDTO permission = permissionApplicationService.getPermissionById(id);
         return ResponseEntity.ok(permission);
     }
@@ -56,13 +56,13 @@ public class PermissionController {
     }
 
     @GetMapping("/role/{roleId}")
-    public ResponseEntity<List<PermissionDTO>> getPermissionsByRoleId(@PathVariable Long roleId) {
+    public ResponseEntity<List<PermissionDTO>> getPermissionsByRoleId(@PathVariable String roleId) {
         List<PermissionDTO> permissions = permissionApplicationService.getPermissionsByRoleId(roleId);
         return ResponseEntity.ok(permissions);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PermissionDTO>> getPermissionsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<PermissionDTO>> getPermissionsByUserId(@PathVariable String userId) {
         List<PermissionDTO> permissions = permissionApplicationService.getPermissionsByUserId(userId);
         return ResponseEntity.ok(permissions);
     }

@@ -15,5 +15,5 @@ import java.util.List;
 public class AssignPermissionDTO {
 
     @NotEmpty(message = "权限ID列表不能为空")
-    private List<Long> permissionIds;
+    private List<String> permissionIds;
 }

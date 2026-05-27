@@ -30,8 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userMapper.selectById(id).map(this::toDomain);
+    public Optional<User> findById(String id) {
+        return Optional.ofNullable(this.toDomain(userMapper.selectById(id)));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         userMapper.deleteById(id);
     }
 
@@ -92,8 +92,8 @@ public class UserRepositoryImpl implements UserRepository {
                 .phone(user.getPhone())
                 .realName(user.getRealName())
                 .status(user.getStatus() != null ? user.getStatus().getCode() : null)
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
+                .createdTime(user.getCreatedTime())
+                .updatedTime(user.getModifiedTime())
                 .build();
     }
 
@@ -106,8 +106,8 @@ public class UserRepositoryImpl implements UserRepository {
                 .phone(po.getPhone())
                 .realName(po.getRealName())
                 .status(po.getStatus() != null ? UserStatus.fromCode(po.getStatus()) : null)
-                .createdAt(po.getCreatedAt())
-                .updatedAt(po.getUpdatedAt())
+                .createdTime(po.getCreatedTime())
+                .updatedTime(po.getModifiedTime())
                 .build();
     }
 }

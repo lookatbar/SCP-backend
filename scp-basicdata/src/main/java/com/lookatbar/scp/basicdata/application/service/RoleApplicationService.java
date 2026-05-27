@@ -33,18 +33,18 @@ public class RoleApplicationService {
     }
 
     @Transactional
-    public RoleDTO updateRole(Long id, RoleUpdateDTO dto) {
+    public RoleDTO updateRole(String id, RoleUpdateDTO dto) {
         Role role = roleAssembler.toDomain(id, dto);
         Role updatedRole = roleDomainService.updateRole(role);
         return roleAssembler.toDTO(updatedRole);
     }
 
     @Transactional
-    public void deleteRole(Long id) {
+    public void deleteRole(String id) {
         roleDomainService.deleteRole(id);
     }
 
-    public RoleDTO getRoleById(Long id) {
+    public RoleDTO getRoleById(String id) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("角色不存在"));
         RoleDTO dto = roleAssembler.toDTO(role);
@@ -73,26 +73,26 @@ public class RoleApplicationService {
     }
 
     @Transactional
-    public void assignPermissions(Long roleId, AssignPermissionDTO dto) {
+    public void assignPermissions(String roleId, AssignPermissionDTO dto) {
         roleDomainService.assignPermissions(roleId, dto.getPermissionIds());
     }
 
     @Transactional
-    public void revokePermission(Long roleId, Long permissionId) {
+    public void revokePermission(String roleId, String permissionId) {
         roleDomainService.revokePermission(roleId, permissionId);
     }
 
     @Transactional
-    public void inheritRole(Long parentRoleId, Long childRoleId) {
+    public void inheritRole(String parentRoleId, String childRoleId) {
         roleDomainService.inheritRole(parentRoleId, childRoleId);
     }
 
     @Transactional
-    public void removeInheritance(Long parentRoleId, Long childRoleId) {
+    public void removeInheritance(String parentRoleId, String childRoleId) {
         roleDomainService.removeInheritance(parentRoleId, childRoleId);
     }
 
-    public boolean hasPermission(Long roleId, String permissionCode) {
+    public boolean hasPermission(String roleId, String permissionCode) {
         return roleDomainService.hasPermission(roleId, permissionCode);
     }
 }

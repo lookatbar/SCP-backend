@@ -4,22 +4,24 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lookatbar.scp.basicdata.domain.model.permission.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("rbac_permission")
+@TableName("basicdata_permission")
 public class PermissionPO {
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "id", type = IdType.ASSIGN_UUID)
+    private String id;
 
     @TableField("name")
     private String name;
@@ -31,7 +33,7 @@ public class PermissionPO {
     private Integer type;
 
     @TableField("parent_id")
-    private Long parentId;
+    private String parentId;
 
     @TableField("path")
     private String path;
@@ -48,9 +50,19 @@ public class PermissionPO {
     @TableField("status")
     private Integer status;
 
-    @TableField("created_at")
-    private LocalDateTime createdAt;
+    @TableField("created_by")
+    private String createdBy;
 
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
+    @TableField("modified_by")
+    private String modifiedBy;
+
+    @TableField("created_time")
+    private LocalDateTime createdTime;
+
+    @TableField("modified_time")
+    private LocalDateTime modifiedTime;
+
+    @TableField("updated_time")
+    private LocalDateTime updatedTime;
+
 }

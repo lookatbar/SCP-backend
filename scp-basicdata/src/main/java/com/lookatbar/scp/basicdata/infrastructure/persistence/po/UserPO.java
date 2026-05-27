@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("rbac_user")
+@TableName("basicdata_user")
 public class UserPO {
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "id", type = IdType.ASSIGN_UUID)
+    private String id;
 
     @TableField("username")
     private String username;
@@ -39,9 +39,18 @@ public class UserPO {
     @TableField("status")
     private Integer status;
 
-    @TableField("created_at")
-    private LocalDateTime createdAt;
+    @TableField("created_by")
+    private String createdBy;
 
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
+    @TableField("modified_by")
+    private String modifiedBy;
+
+    @TableField("created_time")
+    private LocalDateTime createdTime;
+
+    @TableField("modified_time")
+    private LocalDateTime modifiedTime;
+
+    @TableField("updated_time")
+    private LocalDateTime updatedTime;
 }

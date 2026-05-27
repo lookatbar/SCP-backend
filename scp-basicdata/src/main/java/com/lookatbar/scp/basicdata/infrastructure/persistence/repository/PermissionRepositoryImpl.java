@@ -35,8 +35,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
     }
 
     @Override
-    public Optional<Permission> findById(Long id) {
-        return permissionMapper.selectById(id).map(this::toDomain);
+    public Optional<Permission> findById(String id) {
+        return Optional.ofNullable(this.toDomain(permissionMapper.selectById(id)));
     }
 
     @Override
@@ -66,28 +66,28 @@ public class PermissionRepositoryImpl implements PermissionRepository {
     }
 
     @Override
-    public List<Permission> findByRoleId(Long roleId) {
+    public List<Permission> findByRoleId(String roleId) {
         return permissionMapper.findByRoleId(roleId).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Permission> findByUserId(Long userId) {
+    public List<Permission> findByUserId(String userId) {
         return permissionMapper.findByUserId(userId).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Permission> findByParentId(Long parentId) {
+    public List<Permission> findByParentId(String parentId) {
         return permissionMapper.findByParentId(parentId).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         permissionMapper.deleteById(id);
     }
 
@@ -97,22 +97,22 @@ public class PermissionRepositoryImpl implements PermissionRepository {
     }
 
     @Override
-    public void addRolePermission(Long roleId, Long permissionId) {
+    public void addRolePermission(String roleId, String permissionId) {
         rolePermissionMapper.insertRolePermission(roleId, permissionId);
     }
 
     @Override
-    public void removeRolePermission(Long roleId, Long permissionId) {
+    public void removeRolePermission(String roleId, String permissionId) {
         rolePermissionMapper.deleteRolePermission(roleId, permissionId);
     }
 
     @Override
-    public void addUserRole(Long userId, Long roleId) {
+    public void addUserRole(String userId, String roleId) {
         userRoleMapper.insertUserRole(userId, roleId);
     }
 
     @Override
-    public void removeUserRole(Long userId, Long roleId) {
+    public void removeUserRole(String userId, String roleId) {
         userRoleMapper.deleteUserRole(userId, roleId);
     }
 
@@ -128,8 +128,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                 .description(permission.getDescription())
                 .sortOrder(permission.getSortOrder())
                 .status(permission.getStatus() != null ? permission.getStatus().getCode() : null)
-                .createdAt(permission.getCreatedAt())
-                .updatedAt(permission.getUpdatedAt())
+                .createdTime(permission.getCreatedTime())
+                .modifiedTime(permission.getModifiedTime())
                 .build();
     }
 
@@ -145,8 +145,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
                 .description(po.getDescription())
                 .sortOrder(po.getSortOrder())
                 .status(po.getStatus() != null ? PermissionStatus.fromCode(po.getStatus()) : null)
-                .createdAt(po.getCreatedAt())
-                .updatedAt(po.getUpdatedAt())
+                .createdTime(po.getCreatedTime())
+                .modifiedTime(po.getModifiedTime())
                 .build();
     }
 }

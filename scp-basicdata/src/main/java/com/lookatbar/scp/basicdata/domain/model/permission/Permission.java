@@ -15,18 +15,21 @@ import java.util.List;
 @AllArgsConstructor
 public class Permission {
 
-    private Long id;
+    private String id;
     private String name;
     private String code;
     private PermissionType type;
-    private Long parentId;
+    private String parentId;
     private String path;
     private String method;
     private String description;
     private Integer sortOrder;
     private PermissionStatus status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdBy;
+    private String modifiedBy;
+    private LocalDateTime createdTime;
+    private LocalDateTime modifiedTime;
+    private LocalDateTime updatedTime;
 
     @Builder.Default
     private List<Permission> children = new ArrayList<>();

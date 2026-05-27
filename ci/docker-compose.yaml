@@ -10,6 +10,7 @@ services:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_general_ci
       --explicit_defaults_for_timestamp=true
+      --default-authentication-plugin=mysql_native_password
     volumes:
       - D:/dockerdata/mysql/config:/etc/mysql/conf.d
       - D:/dockerdata/mysql/data:/var/lib/mysql
@@ -48,8 +49,9 @@ services:
       MYSQL_SERVICE_HOST: mysql
       MYSQL_SERVICE_DB_NAME: nacos
       MYSQL_SERVICE_PORT: 3306
-      MYSQL_SERVICE_USER: 'lookatbar'
-      MYSQL_SERVICE_PASSWORD: '1'
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: lookatbar@qq.com
+      MYSQL_SERVICE_DB_PARAM: useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
       TZ: Asia/Shanghai
       # JVM 内存参数，和容器内存对齐，防止OOM
       JVM_XMS: 512m

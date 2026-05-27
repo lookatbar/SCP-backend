@@ -32,8 +32,8 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public Optional<Role> findById(Long id) {
-        return roleMapper.selectById(id).map(this::toDomain);
+    public Optional<Role> findById(String id) {
+        return Optional.ofNullable(this.toDomain(roleMapper.selectById(id)));
     }
 
     @Override
@@ -61,28 +61,28 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public List<Role> findByUserId(Long userId) {
+    public List<Role> findByUserId(String userId) {
         return roleMapper.findByUserId(userId).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Role> findParentRoles(Long roleId) {
+    public List<Role> findParentRoles(String roleId) {
         return roleMapper.findParentRoles(roleId).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Role> findChildRoles(Long roleId) {
+    public List<Role> findChildRoles(String roleId) {
         return roleMapper.findChildRoles(roleId).stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         roleMapper.deleteById(id);
     }
 
@@ -97,12 +97,12 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public void addRoleHierarchy(Long parentRoleId, Long childRoleId) {
+    public void addRoleHierarchy(String parentRoleId, String childRoleId) {
         roleHierarchyMapper.insertRoleHierarchy(parentRoleId, childRoleId);
     }
 
     @Override
-    public void removeRoleHierarchy(Long parentRoleId, Long childRoleId) {
+    public void removeRoleHierarchy(String parentRoleId, String childRoleId) {
         roleHierarchyMapper.deleteRoleHierarchy(parentRoleId, childRoleId);
     }
 
@@ -113,8 +113,8 @@ public class RoleRepositoryImpl implements RoleRepository {
                 .code(role.getCode())
                 .description(role.getDescription())
                 .status(role.getStatus() != null ? role.getStatus().getCode() : null)
-                .createdAt(role.getCreatedAt())
-                .updatedAt(role.getUpdatedAt())
+                .createdTime(role.getCreatedTime())
+                .updatedTime(role.getModifiedTime())
                 .build();
     }
 
@@ -125,8 +125,8 @@ public class RoleRepositoryImpl implements RoleRepository {
                 .code(po.getCode())
                 .description(po.getDescription())
                 .status(po.getStatus() != null ? RoleStatus.fromCode(po.getStatus()) : null)
-                .createdAt(po.getCreatedAt())
-                .updatedAt(po.getUpdatedAt())
+                .createdTime(po.getCreatedTime())
+                .updatedTime(po.getModifiedTime())
                 .build();
     }
 }

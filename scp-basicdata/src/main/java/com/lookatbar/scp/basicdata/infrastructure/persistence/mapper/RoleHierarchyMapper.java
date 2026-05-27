@@ -10,15 +10,15 @@ import org.apache.ibatis.annotations.Insert;
 @Mapper
 public interface RoleHierarchyMapper extends BaseMapper<RoleHierarchyPO> {
 
-    @Insert("INSERT INTO rbac_role_hierarchy (parent_role_id, child_role_id) VALUES (#{parentRoleId}, #{childRoleId})")
-    void insertRoleHierarchy(@Param("parentRoleId") Long parentRoleId, @Param("childRoleId") Long childRoleId);
+    @Insert("INSERT INTO basicdata_role_hierarchy (parent_role_id, child_role_id) VALUES (#{parentRoleId}, #{childRoleId})")
+    void insertRoleHierarchy(@Param("parentRoleId") String parentRoleId, @Param("childRoleId") String childRoleId);
 
-    @Delete("DELETE FROM rbac_role_hierarchy WHERE parent_role_id = #{parentRoleId} AND child_role_id = #{childRoleId}")
-    void deleteRoleHierarchy(@Param("parentRoleId") Long parentRoleId, @Param("childRoleId") Long childRoleId);
+    @Delete("DELETE FROM basicdata_role_hierarchy WHERE parent_role_id = #{parentRoleId} AND child_role_id = #{childRoleId}")
+    void deleteRoleHierarchy(@Param("parentRoleId") String parentRoleId, @Param("childRoleId") String childRoleId);
 
-    @Delete("DELETE FROM rbac_role_hierarchy WHERE parent_role_id = #{roleId}")
-    void deleteByParentRoleId(@Param("roleId") Long roleId);
+    @Delete("DELETE FROM basicdata_role_hierarchy WHERE parent_role_id = #{roleId}")
+    void deleteByParentRoleId(@Param("roleId") String roleId);
 
-    @Delete("DELETE FROM rbac_role_hierarchy WHERE child_role_id = #{roleId}")
-    void deleteByChildRoleId(@Param("roleId") Long roleId);
+    @Delete("DELETE FROM basicdata_role_hierarchy WHERE child_role_id = #{roleId}")
+    void deleteByChildRoleId(@Param("roleId") String roleId);
 }

@@ -5,72 +5,49 @@ spring:
     name: basicdata-service
   profiles:
     active: dev
-  file:
-    path: "logs/${spring.application.name}"
-  # 缓存配置（核心）
-  cache:
-    # 缓存类型：指定使用 redis 作为缓存
-    type: redis
-    # 缓存全局前缀
-    key-prefix: "scp:cache:"
-    # 是否允许缓存 null 值
-    cache-null-values: false
-    # 全局默认过期时间（毫秒），30分钟
-    redis:
-      time-to-live: 1800000
-      # 是否开启前缀
-      use-key-prefix: true
-# keytool -genkeypair -alias hmall -keyalg RSA -keypass hmall123 -keystore hmall.jks -storepass hmall123
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
-# ==============================
-# 3. MySQL8 数据源（Druid）
-# ==============================
-datasource:
-  type: com.alibaba.druid.pool.DruidDataSource
-  driver-class-name: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://127.0.0.1:3306/scp?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
-  username: lookatbar
-  password: 1
-
-  # Druid 连接池
-  druid:
-    initial-size: 2
-    min-idle: 2
-    max-active: 5
-    max-wait: 6000
-
-# ==============================
-# 4. Redis 配置
-# ==============================
-redis:
-  host: 127.0.0.1
-  port: 6379
-  password:    # 无密码
-  database: 0
-  connect-timeout: 3000
-  lettuce:
-    pool:
+  # 数据源配置（Druid）
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/scp?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: lookatbar
+    password: 1
+    druid:
+      initial-size: 2
+      min-idle: 2
       max-active: 5
-      max-idle: 3
-      min-idle: 1
+      max-wait: 6000
+
+  # 数据库初始化配置
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      continue-on-error: false
+      schema-locations: classpath:db/schema.sql
+      # data-locations: classpath:db/data.sql
+
+  # Redis 配置
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password:
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 5
+          max-idle: 3
+          min-idle: 1
 
 # ==============================
-# 5. RabbitMQ 配置
-# ==============================
-rabbitmq:
-  host: 127.0.0.1
-  port: 5672
-  username: admin
-  password: admin
-  virtual-host: /
-  listener:
-    simple:
-      acknowledge-mode: auto  # 自动ack
-      retry:
-        enabled: true         # 开启重试
-
-# ==============================
-# 6. Nacos 注册中心 + 配置中心
+# Nacos 注册中心 + 配置中心
 # ==============================
 spring.cloud:
   nacos:
@@ -87,39 +64,28 @@ spring.cloud:
       namespace: scp
 
 # ==============================
-# 7. MyBatis-Plus 配置（可选）
+# MyBatis-Plus 配置
 # ==============================
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       id-type: auto
+  mapper-locations: classpath:mapper/**/*.xml
 
+# ==============================
+# Spring Security 配置
+# ==============================
+spring.security:
+  filter:
+    order: -100
 
-# 文件存储统一配置
-file-storage:
-  # 默认使用的存储平台：minio
-  default-platform: minio
-  # 开启控制台打印日志
-  log: true
-  # 自动生成缩略图（可选）
-  thumbnail:
-    enable: false
-
-
-minio:
-  # MinIO 服务地址（Docker 地址）
-  endpoint: http://127.0.0.1:9000
-  # 账号
-  access-key: minioadmin
-  # 密码
-  secret-key: minioadmin
-  # 默认存储桶名称（需要提前创建）
-  bucket-name: test-bucket
-  # 连接超时时间
-  connect-timeout: 5000
-  # 写入超时时间
-  write-timeout: 30000
-  # 读取超时时间
-  read-timeout: 30000
+# ==============================
+# Logging 配置
+# ==============================
+logging:
+  level:
+    com.lookatbar.scp.basicdata: DEBUG
+    org.mybatis: DEBUG

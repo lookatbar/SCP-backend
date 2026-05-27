@@ -55,7 +55,7 @@ public class UserDomainService {
     }
 
     @Transactional
-    public void deleteUser(Long userId) {
+    public void deleteUser(String userId) {
         if (!userRepository.findById(userId).isPresent()) {
             throw new IllegalArgumentException("用户不存在");
         }
@@ -63,7 +63,7 @@ public class UserDomainService {
     }
 
     @Transactional
-    public void assignRole(Long userId, Long roleId) {
+    public void assignRole(String userId, String roleId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("用户不存在"));
         Role role = roleRepository.findById(roleId)
@@ -73,21 +73,21 @@ public class UserDomainService {
     }
 
     @Transactional
-    public void revokeRole(Long userId, Long roleId) {
+    public void revokeRole(String userId, String roleId) {
         permissionRepository.removeUserRole(userId, roleId);
     }
 
     @Transactional
-    public void assignRoles(Long userId, List<Long> roleIds) {
+    public void assignRoles(String userId, List<String> roleIds) {
         roleIds.forEach(roleId -> assignRole(userId, roleId));
     }
 
-    public boolean hasPermission(Long userId, String permissionCode) {
+    public boolean hasPermission(String userId, String permissionCode) {
         return permissionRepository.findByUserId(userId).stream()
                 .anyMatch(permission -> permission.getCode().equals(permissionCode));
     }
 
-    public List<Role> getUserRoles(Long userId) {
+    public List<Role> getUserRoles(String userId) {
         return roleRepository.findByUserId(userId);
     }
 }

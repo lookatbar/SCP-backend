@@ -46,7 +46,7 @@ public class RoleDomainService {
     }
 
     @Transactional
-    public void deleteRole(Long roleId) {
+    public void deleteRole(String roleId) {
         if (!roleRepository.findById(roleId).isPresent()) {
             throw new IllegalArgumentException("角色不存在");
         }
@@ -54,7 +54,7 @@ public class RoleDomainService {
     }
 
     @Transactional
-    public void assignPermission(Long roleId, Long permissionId) {
+    public void assignPermission(String roleId, String permissionId) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new IllegalArgumentException("角色不存在"));
         Permission permission = permissionRepository.findById(permissionId)
@@ -64,17 +64,17 @@ public class RoleDomainService {
     }
 
     @Transactional
-    public void revokePermission(Long roleId, Long permissionId) {
+    public void revokePermission(String roleId, String permissionId) {
         permissionRepository.removeRolePermission(roleId, permissionId);
     }
 
     @Transactional
-    public void assignPermissions(Long roleId, List<Long> permissionIds) {
+    public void assignPermissions(String roleId, List<String> permissionIds) {
         permissionIds.forEach(permissionId -> assignPermission(roleId, permissionId));
     }
 
     @Transactional
-    public void inheritRole(Long parentRoleId, Long childRoleId) {
+    public void inheritRole(String parentRoleId, String childRoleId) {
         Role parentRole = roleRepository.findById(parentRoleId)
                 .orElseThrow(() -> new IllegalArgumentException("父角色不存在"));
         Role childRole = roleRepository.findById(childRoleId)
@@ -88,11 +88,11 @@ public class RoleDomainService {
     }
 
     @Transactional
-    public void removeInheritance(Long parentRoleId, Long childRoleId) {
+    public void removeInheritance(String parentRoleId, String childRoleId) {
         roleRepository.removeRoleHierarchy(parentRoleId, childRoleId);
     }
 
-    public boolean hasPermission(Long roleId, String permissionCode) {
+    public boolean hasPermission(String roleId, String permissionCode) {
         Role role = roleRepository.findById(roleId).orElse(null);
         if (role == null) {
             return false;
@@ -100,7 +100,7 @@ public class RoleDomainService {
         return role.hasPermission(permissionCode);
     }
 
-    public List<Permission> getRolePermissions(Long roleId) {
+    public List<Permission> getRolePermissions(String roleId) {
         return permissionRepository.findByRoleId(roleId);
     }
 }

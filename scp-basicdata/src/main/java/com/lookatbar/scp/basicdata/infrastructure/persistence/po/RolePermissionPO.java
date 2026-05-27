@@ -15,18 +15,30 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("rbac_role_permission")
+@TableName("basicdata_role_permission")
 public class RolePermissionPO {
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "id", type = IdType.ASSIGN_UUID)
+    private String id;
 
     @TableField("role_id")
-    private Long roleId;
+    private String roleId;
 
     @TableField("permission_id")
-    private Long permissionId;
+    private String permissionId;
 
-    @TableField("created_at")
-    private LocalDateTime createdAt;
+    @TableField("created_by")
+    private String createdBy;
+
+    @TableField("modified_by")
+    private String modifiedBy;
+
+    @TableField("created_time")
+    private LocalDateTime createdTime;
+
+    @TableField("modified_time")
+    private LocalDateTime modifiedTime;
+
+    @TableField("updated_time")
+    private LocalDateTime updatedTime;
 }

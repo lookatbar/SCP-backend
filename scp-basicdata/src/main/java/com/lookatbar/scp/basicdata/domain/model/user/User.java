@@ -1,5 +1,6 @@
 package com.lookatbar.scp.basicdata.domain.model.user;
 
+import com.lookatbar.scp.basicdata.domain.model.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,15 +16,18 @@ import java.util.List;
 @AllArgsConstructor
 public class User {
 
-    private Long id;
+    private String id;
     private String username;
     private String password;
     private String email;
     private String phone;
     private String realName;
     private UserStatus status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdBy;
+    private String modifiedBy;
+    private LocalDateTime createdTime;
+    private LocalDateTime modifiedTime;
+    private LocalDateTime updatedTime;
 
     @Builder.Default
     private List<Role> roles = new ArrayList<>();

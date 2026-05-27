@@ -27,19 +27,19 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable String id, @Valid @RequestBody UserUpdateDTO dto) {
         UserDTO user = userApplicationService.updateUser(id, dto);
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userApplicationService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         UserDTO user = userApplicationService.getUserById(id);
         return ResponseEntity.ok(user);
     }
@@ -51,19 +51,19 @@ public class UserController {
     }
 
     @PostMapping("/{id}/roles")
-    public ResponseEntity<Void> assignRoles(@PathVariable Long id, @Valid @RequestBody AssignRoleDTO dto) {
+    public ResponseEntity<Void> assignRoles(@PathVariable String id, @Valid @RequestBody AssignRoleDTO dto) {
         userApplicationService.assignRoles(id, dto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{userId}/roles/{roleId}")
-    public ResponseEntity<Void> revokeRole(@PathVariable Long userId, @PathVariable Long roleId) {
+    public ResponseEntity<Void> revokeRole(@PathVariable String userId, @PathVariable String roleId) {
         userApplicationService.revokeRole(userId, roleId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/permissions/check")
-    public ResponseEntity<Boolean> checkPermission(@PathVariable Long id, @RequestParam String permissionCode) {
+    public ResponseEntity<Boolean> checkPermission(@PathVariable String id, @RequestParam String permissionCode) {
         boolean hasPermission = userApplicationService.hasPermission(id, permissionCode);
         return ResponseEntity.ok(hasPermission);
     }

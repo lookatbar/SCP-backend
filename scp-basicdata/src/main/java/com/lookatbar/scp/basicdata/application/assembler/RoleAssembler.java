@@ -19,7 +19,7 @@ public class RoleAssembler {
                 .build();
     }
 
-    public Role toDomain(Long id, RoleUpdateDTO dto) {
+    public Role toDomain(String id, RoleUpdateDTO dto) {
         Role role = Role.builder()
                 .id(id)
                 .description(dto.getDescription())
@@ -48,8 +48,8 @@ public class RoleAssembler {
                 .description(role.getDescription())
                 .status(role.getStatus() != null ? role.getStatus().getCode() : null)
                 .statusDescription(role.getStatus() != null ? role.getStatus().getDescription() : null)
-                .createdAt(role.getCreatedAt())
-                .updatedAt(role.getUpdatedAt())
+                .createdAt(role.getCreatedTime())
+                .updatedAt(role.getModifiedTime())
                 .build();
     }
 }

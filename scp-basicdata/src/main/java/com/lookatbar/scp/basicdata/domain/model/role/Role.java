@@ -1,5 +1,6 @@
 package com.lookatbar.scp.basicdata.domain.model.role;
 
+import com.lookatbar.scp.basicdata.domain.model.permission.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,13 +16,16 @@ import java.util.List;
 @AllArgsConstructor
 public class Role {
 
-    private Long id;
+    private String id;
     private String name;
     private String code;
     private String description;
     private RoleStatus status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdBy;
+    private String modifiedBy;
+    private LocalDateTime createdTime;
+    private LocalDateTime modifiedTime;
+    private LocalDateTime updatedTime;
 
     @Builder.Default
     private List<Permission> permissions = new ArrayList<>();
@@ -51,7 +55,6 @@ public class Role {
         if (permissions == null) {
             return false;
         }
-        // 检查自身权限
         boolean hasDirectPermission = permissions.stream()
                 .anyMatch(permission -> permission.getCode().equals(permissionCode));
 
@@ -59,7 +62,6 @@ public class Role {
             return true;
         }
 
-        // 检查继承的父角色权限（RBAC3角色继承）
         if (parentRoles != null) {
             return parentRoles.stream()
                     .anyMatch(parentRole -> parentRole.hasPermission(permissionCode));

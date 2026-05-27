@@ -4,7 +4,8 @@ import com.lookatbar.scp.basicdata.api.annotation.RequiresPermission;
 import com.lookatbar.scp.basicdata.application.service.UserApplicationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,10 +13,17 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.lang.reflect.Method;
 
 @Component
-@RequiredArgsConstructor
 public class PermissionInterceptor implements HandlerInterceptor {
 
-    private final UserApplicationService userApplicationService;
+    private final ApplicationContext applicationContext;
+
+    public PermissionInterceptor(@Lazy ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    private UserApplicationService getUserApplicationService() {
+        return applicationContext.getBean(UserApplicationService.class);
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -46,9 +54,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
         boolean hasPermission;
         if (logical == RequiresPermission.Logical.AND) {
-            hasPermission = checkAllPermissions(Long.parseLong(userId), permissionCodes);
+            hasPermission = checkAllPermissions(userId, permissionCodes);
         } else {
-            hasPermission = checkAnyPermission(Long.parseLong(userId), permissionCodes);
+            hasPermission = checkAnyPermission(userId, permissionCodes);
         }
 
         if (!hasPermission) {
@@ -59,18 +67,20 @@ public class PermissionInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private boolean checkAllPermissions(Long userId, String[] permissionCodes) {
+    private boolean checkAllPermissions(String userId, String[] permissionCodes) {
+        UserApplicationService service = getUserApplicationService();
         for (String code : permissionCodes) {
-            if (!userApplicationService.hasPermission(userId, code)) {
+            if (!service.hasPermission(userId, code)) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean checkAnyPermission(Long userId, String[] permissionCodes) {
+    private boolean checkAnyPermission(String userId, String[] permissionCodes) {
+        UserApplicationService service = getUserApplicationService();
         for (String code : permissionCodes) {
-            if (userApplicationService.hasPermission(userId, code)) {
+            if (service.hasPermission(userId, code)) {
                 return true;
             }
         }

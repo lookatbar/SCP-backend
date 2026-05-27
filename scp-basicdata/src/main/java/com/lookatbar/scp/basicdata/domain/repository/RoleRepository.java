@@ -9,7 +9,7 @@ public interface RoleRepository {
 
     Role save(Role role);
 
-    Optional<Role> findById(Long id);
+    Optional<Role> findById(String id);
 
     Optional<Role> findByCode(String code);
 
@@ -19,19 +19,19 @@ public interface RoleRepository {
 
     List<Role> findByStatus(Integer status);
 
-    List<Role> findByUserId(Long userId);
+    List<Role> findByUserId(String userId);
 
-    List<Role> findParentRoles(Long roleId);
+    List<Role> findParentRoles(String roleId);
 
-    List<Role> findChildRoles(Long roleId);
+    List<Role> findChildRoles(String roleId);
 
-    void deleteById(Long id);
+    void deleteById(String id);
 
     boolean existsByCode(String code);
 
     boolean existsByName(String name);
 
-    void addRoleHierarchy(Long parentRoleId, Long childRoleId);
+    void addRoleHierarchy(String parentRoleId, String childRoleId);
 
-    void removeRoleHierarchy(Long parentRoleId, Long childRoleId);
+    void removeRoleHierarchy(String parentRoleId, String childRoleId);
 }

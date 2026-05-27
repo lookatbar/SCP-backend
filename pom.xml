@@ -72,11 +72,17 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
-            <!-- mybatis plus 管理 -->
+            <!-- mybatis plus 管理 - 3.5.6+ 兼容 Spring 6.1.x -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <version>3.5.6</version>
+            </dependency>
+            <!-- mybatis-spring 管理 - 3.0.3+ 兼容 Spring 6.x -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>3.0.3</version>
             </dependency>
             <!-- Druid连接池 -->
             <dependency>

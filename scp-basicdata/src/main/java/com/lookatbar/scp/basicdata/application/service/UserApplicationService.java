@@ -35,7 +35,7 @@ public class UserApplicationService {
     }
 
     @Transactional
-    public UserDTO updateUser(Long id, UserUpdateDTO dto) {
+    public UserDTO updateUser(String id, UserUpdateDTO dto) {
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
             dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
@@ -45,11 +45,11 @@ public class UserApplicationService {
     }
 
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(String id) {
         userDomainService.deleteUser(id);
     }
 
-    public UserDTO getUserById(Long id) {
+    public UserDTO getUserById(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("用户不存在"));
         UserDTO dto = userAssembler.toDTO(user);
@@ -72,16 +72,16 @@ public class UserApplicationService {
     }
 
     @Transactional
-    public void assignRoles(Long userId, AssignRoleDTO dto) {
+    public void assignRoles(String userId, AssignRoleDTO dto) {
         userDomainService.assignRoles(userId, dto.getRoleIds());
     }
 
     @Transactional
-    public void revokeRole(Long userId, Long roleId) {
+    public void revokeRole(String userId, String roleId) {
         userDomainService.revokeRole(userId, roleId);
     }
 
-    public boolean hasPermission(Long userId, String permissionCode) {
+    public boolean hasPermission(String userId, String permissionCode) {
         return userDomainService.hasPermission(userId, permissionCode);
     }
 }

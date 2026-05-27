@@ -10,15 +10,15 @@ import org.apache.ibatis.annotations.Insert;
 @Mapper
 public interface RolePermissionMapper extends BaseMapper<RolePermissionPO> {
 
-    @Insert("INSERT INTO rbac_role_permission (role_id, permission_id) VALUES (#{roleId}, #{permissionId})")
-    void insertRolePermission(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+    @Insert("INSERT INTO basicdata_role_permission (role_id, permission_id) VALUES (#{roleId}, #{permissionId})")
+    void insertRolePermission(@Param("roleId") String roleId, @Param("permissionId") String permissionId);
 
-    @Delete("DELETE FROM rbac_role_permission WHERE role_id = #{roleId} AND permission_id = #{permissionId}")
-    void deleteRolePermission(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+    @Delete("DELETE FROM basicdata_role_permission WHERE role_id = #{roleId} AND permission_id = #{permissionId}")
+    void deleteRolePermission(@Param("roleId") String roleId, @Param("permissionId") String permissionId);
 
-    @Delete("DELETE FROM rbac_role_permission WHERE role_id = #{roleId}")
-    void deleteByRoleId(@Param("roleId") Long roleId);
+    @Delete("DELETE FROM basicdata_role_permission WHERE role_id = #{roleId}")
+    void deleteByRoleId(@Param("roleId") String roleId);
 
-    @Delete("DELETE FROM rbac_role_permission WHERE permission_id = #{permissionId}")
-    void deleteByPermissionId(@Param("permissionId") Long permissionId);
+    @Delete("DELETE FROM basicdata_role_permission WHERE permission_id = #{permissionId}")
+    void deleteByPermissionId(@Param("permissionId") String permissionId);
 }

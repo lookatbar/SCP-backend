@@ -9,7 +9,7 @@ public interface PermissionRepository {
 
     Permission save(Permission permission);
 
-    Optional<Permission> findById(Long id);
+    Optional<Permission> findById(String id);
 
     Optional<Permission> findByCode(String code);
 
@@ -19,21 +19,21 @@ public interface PermissionRepository {
 
     List<Permission> findByType(Integer type);
 
-    List<Permission> findByRoleId(Long roleId);
+    List<Permission> findByRoleId(String roleId);
 
-    List<Permission> findByUserId(Long userId);
+    List<Permission> findByUserId(String userId);
 
-    List<Permission> findByParentId(Long parentId);
+    List<Permission> findByParentId(String parentId);
 
-    void deleteById(Long id);
+    void deleteById(String id);
 
     boolean existsByCode(String code);
 
-    void addRolePermission(Long roleId, Long permissionId);
+    void addRolePermission(String roleId, String permissionId);
 
-    void removeRolePermission(Long roleId, Long permissionId);
+    void removeRolePermission(String roleId, String permissionId);
 
-    void addUserRole(Long userId, Long roleId);
+    void addUserRole(String userId, String roleId);
 
-    void removeUserRole(Long userId, Long roleId);
+    void removeUserRole(String userId, String roleId);
 }

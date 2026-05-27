@@ -27,19 +27,19 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RoleDTO> updateRole(@PathVariable Long id, @Valid @RequestBody RoleUpdateDTO dto) {
+    public ResponseEntity<RoleDTO> updateRole(@PathVariable String id, @Valid @RequestBody RoleUpdateDTO dto) {
         RoleDTO role = roleApplicationService.updateRole(id, dto);
         return ResponseEntity.ok(role);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRole(@PathVariable String id) {
         roleApplicationService.deleteRole(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RoleDTO> getRoleById(@PathVariable Long id) {
+    public ResponseEntity<RoleDTO> getRoleById(@PathVariable String id) {
         RoleDTO role = roleApplicationService.getRoleById(id);
         return ResponseEntity.ok(role);
     }
@@ -51,31 +51,31 @@ public class RoleController {
     }
 
     @PostMapping("/{id}/permissions")
-    public ResponseEntity<Void> assignPermissions(@PathVariable Long id, @Valid @RequestBody AssignPermissionDTO dto) {
+    public ResponseEntity<Void> assignPermissions(@PathVariable String id, @Valid @RequestBody AssignPermissionDTO dto) {
         roleApplicationService.assignPermissions(id, dto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{roleId}/permissions/{permissionId}")
-    public ResponseEntity<Void> revokePermission(@PathVariable Long roleId, @PathVariable Long permissionId) {
+    public ResponseEntity<Void> revokePermission(@PathVariable String roleId, @PathVariable String permissionId) {
         roleApplicationService.revokePermission(roleId, permissionId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/inherit")
-    public ResponseEntity<Void> inheritRole(@RequestParam Long parentRoleId, @RequestParam Long childRoleId) {
+    public ResponseEntity<Void> inheritRole(@RequestParam String parentRoleId, @RequestParam String childRoleId) {
         roleApplicationService.inheritRole(parentRoleId, childRoleId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/inherit")
-    public ResponseEntity<Void> removeInheritance(@RequestParam Long parentRoleId, @RequestParam Long childRoleId) {
+    public ResponseEntity<Void> removeInheritance(@RequestParam String parentRoleId, @RequestParam String childRoleId) {
         roleApplicationService.removeInheritance(parentRoleId, childRoleId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/permissions/check")
-    public ResponseEntity<Boolean> checkPermission(@PathVariable Long id, @RequestParam String permissionCode) {
+    public ResponseEntity<Boolean> checkPermission(@PathVariable String id, @RequestParam String permissionCode) {
         boolean hasPermission = roleApplicationService.hasPermission(id, permissionCode);
         return ResponseEntity.ok(hasPermission);
     }

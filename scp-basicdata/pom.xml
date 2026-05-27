@@ -49,10 +49,11 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-        <!-- MyBatis Plus -->
+        <!-- MyBatis Plus - 3.5.6 兼容 Spring 6.1.x -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.6</version>
         </dependency>
 
         <!-- Druid -->

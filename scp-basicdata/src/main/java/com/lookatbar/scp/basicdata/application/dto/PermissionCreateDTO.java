@@ -23,7 +23,7 @@ public class PermissionCreateDTO {
 
     private Integer type;
 
-    private Long parentId;
+    private String parentId;
 
     private String path;
 
