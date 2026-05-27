@@ -11,9 +11,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 全局异常处理器
+ * 统一处理应用中的异常，返回标准化的错误响应
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * 处理非法参数异常
+     *
+     * @param e 非法参数异常
+     * @return 错误响应
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException e) {
         Map<String, Object> response = new HashMap<>();
@@ -22,6 +32,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    /**
+     * 处理请求体参数校验异常
+     *
+     * @param e 参数校验异常
+     * @return 错误响应，包含字段级别的错误信息
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException e) {
         Map<String, Object> response = new HashMap<>();
@@ -36,6 +52,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    /**
+     * 处理约束校验异常
+     *
+     * @param e 约束校验异常
+     * @return 错误响应，包含属性级别的错误信息
+     */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException e) {
         Map<String, Object> response = new HashMap<>();
@@ -51,6 +73,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    /**
+     * 处理其他未知异常
+     *
+     * @param e 异常
+     * @return 服务器内部错误响应
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleException(Exception e) {
         Map<String, Object> response = new HashMap<>();

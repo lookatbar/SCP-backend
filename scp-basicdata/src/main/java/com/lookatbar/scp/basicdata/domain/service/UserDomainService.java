@@ -11,14 +11,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 用户领域服务
+ * 处理用户相关的核心业务逻辑，包括用户创建、更新、删除、角色分配等
+ */
 @Service
 @RequiredArgsConstructor
 public class UserDomainService {
 
+    /**
+     * 用户仓储接口
+     */
     private final UserRepository userRepository;
+
+    /**
+     * 角色仓储接口
+     */
     private final RoleRepository roleRepository;
+
+    /**
+     * 权限仓储接口
+     */
     private final PermissionRepository permissionRepository;
 
+    /**
+     * 创建用户
+     * 
+     * @param user 用户领域对象
+     * @return 创建成功的用户对象
+     * @throws IllegalArgumentException 当用户名、邮箱或手机号已存在时抛出
+     */
     @Transactional
     public User createUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
@@ -33,6 +55,13 @@ public class UserDomainService {
         return userRepository.save(user);
     }
 
+    /**
+     * 更新用户信息
+     * 
+     * @param user 用户领域对象
+     * @return 更新后的用户对象
+     * @throws IllegalArgumentException 当用户不存在或用户名/邮箱/手机号重复时抛出
+     */
     @Transactional
     public User updateUser(User user) {
         User existing = userRepository.findById(user.getId())
@@ -54,6 +83,12 @@ public class UserDomainService {
         return userRepository.save(user);
     }
 
+    /**
+     * 删除用户
+     * 
+     * @param userId 用户ID
+     * @throws IllegalArgumentException 当用户不存在时抛出
+     */
     @Transactional
     public void deleteUser(String userId) {
         if (!userRepository.findById(userId).isPresent()) {
@@ -62,6 +97,13 @@ public class UserDomainService {
         userRepository.deleteById(userId);
     }
 
+    /**
+     * 为用户分配单个角色
+     * 
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     * @throws IllegalArgumentException 当用户或角色不存在时抛出
+     */
     @Transactional
     public void assignRole(String userId, String roleId) {
         User user = userRepository.findById(userId)
@@ -72,21 +114,46 @@ public class UserDomainService {
         permissionRepository.addUserRole(userId, roleId);
     }
 
+    /**
+     * 撤销用户的指定角色
+     * 
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     */
     @Transactional
     public void revokeRole(String userId, String roleId) {
         permissionRepository.removeUserRole(userId, roleId);
     }
 
+    /**
+     * 为用户批量分配角色
+     * 
+     * @param userId  用户ID
+     * @param roleIds 角色ID列表
+     */
     @Transactional
     public void assignRoles(String userId, List<String> roleIds) {
         roleIds.forEach(roleId -> assignRole(userId, roleId));
     }
 
+    /**
+     * 检查用户是否具有指定权限
+     * 
+     * @param userId         用户ID
+     * @param permissionCode 权限编码
+     * @return 是否具有该权限
+     */
     public boolean hasPermission(String userId, String permissionCode) {
         return permissionRepository.findByUserId(userId).stream()
                 .anyMatch(permission -> permission.getCode().equals(permissionCode));
     }
 
+    /**
+     * 获取用户的角色列表
+     * 
+     * @param userId 用户ID
+     * @return 角色列表
+     */
     public List<Role> getUserRoles(String userId) {
         return roleRepository.findByUserId(userId);
     }

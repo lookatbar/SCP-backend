@@ -8,9 +8,19 @@ import com.lookatbar.scp.basicdata.domain.model.permission.PermissionStatus;
 import com.lookatbar.scp.basicdata.domain.model.permission.PermissionType;
 import org.springframework.stereotype.Component;
 
+/**
+ * 权限领域对象与DTO转换器
+ * 负责Permission领域模型与PermissionDTO、PermissionCreateDTO、PermissionUpdateDTO之间的转换
+ */
 @Component
 public class PermissionAssembler {
 
+    /**
+     * 将权限创建DTO转换为领域模型
+     *
+     * @param dto 权限创建请求DTO
+     * @return 权限领域模型
+     */
     public Permission toDomain(PermissionCreateDTO dto) {
         return Permission.builder()
                 .name(dto.getName())
@@ -25,6 +35,13 @@ public class PermissionAssembler {
                 .build();
     }
 
+    /**
+     * 将权限更新DTO转换为领域模型
+     *
+     * @param id  权限ID
+     * @param dto 权限更新请求DTO
+     * @return 权限领域模型
+     */
     public Permission toDomain(String id, PermissionUpdateDTO dto) {
         Permission permission = Permission.builder()
                 .id(id)
@@ -54,6 +71,12 @@ public class PermissionAssembler {
         return permission;
     }
 
+    /**
+     * 将权限领域模型转换为DTO
+     *
+     * @param permission 权限领域模型
+     * @return 权限DTO
+     */
     public PermissionDTO toDTO(Permission permission) {
         return PermissionDTO.builder()
                 .id(permission.getId())

@@ -7,9 +7,19 @@ import com.lookatbar.scp.basicdata.domain.model.role.Role;
 import com.lookatbar.scp.basicdata.domain.model.role.RoleStatus;
 import org.springframework.stereotype.Component;
 
+/**
+ * 角色领域对象与DTO转换器
+ * 负责Role领域模型与RoleDTO、RoleCreateDTO、RoleUpdateDTO之间的转换
+ */
 @Component
 public class RoleAssembler {
 
+    /**
+     * 将角色创建DTO转换为领域模型
+     *
+     * @param dto 角色创建请求DTO
+     * @return 角色领域模型
+     */
     public Role toDomain(RoleCreateDTO dto) {
         return Role.builder()
                 .name(dto.getName())
@@ -19,6 +29,13 @@ public class RoleAssembler {
                 .build();
     }
 
+    /**
+     * 将角色更新DTO转换为领域模型
+     *
+     * @param id  角色ID
+     * @param dto 角色更新请求DTO
+     * @return 角色领域模型
+     */
     public Role toDomain(String id, RoleUpdateDTO dto) {
         Role role = Role.builder()
                 .id(id)
@@ -40,6 +57,12 @@ public class RoleAssembler {
         return role;
     }
 
+    /**
+     * 将角色领域模型转换为DTO
+     *
+     * @param role 角色领域模型
+     * @return 角色DTO
+     */
     public RoleDTO toDTO(Role role) {
         return RoleDTO.builder()
                 .id(role.getId())

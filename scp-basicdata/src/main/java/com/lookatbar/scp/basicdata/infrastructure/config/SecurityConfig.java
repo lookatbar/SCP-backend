@@ -10,17 +10,36 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * 安全配置类
+ * 配置密码编码器、权限拦截器和跨域设置
+ */
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
 
+    /**
+     * 权限拦截器
+     */
     private final PermissionInterceptor permissionInterceptor;
 
+    /**
+     * 配置密码编码器
+     * 使用BCrypt算法进行密码加密
+     *
+     * @return BCryptPasswordEncoder实例
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 注册权限拦截器
+     * 拦截所有/api/**请求，排除登录和注册接口
+     *
+     * @param registry 拦截器注册器
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(permissionInterceptor)
@@ -28,6 +47,12 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/users/login", "/api/users/register");
     }
 
+    /**
+     * 配置跨域资源共享(CORS)
+     * 允许所有来源访问/api/**接口
+     *
+     * @param registry CORS注册器
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")

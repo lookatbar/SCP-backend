@@ -10,6 +10,8 @@ spring:
         password: nacos
         file-extension: yaml
         namespace: scp
+        # 禁用gRPC远程配置优先，使用HTTP协议通信（解决9848端口连接失败问题）
+        remote-first: true
         # 先加载公共配置
         shared-configs[0]:
           data-id: scp-common.yaml
@@ -20,3 +22,14 @@ spring:
           data-id: ${spring.application.name}.yaml
           group: DEFAULT_GROUP
           refresh: true
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        namespace: scp
+
+# Nacos Client 配置：禁用gRPC，强制使用HTTP协议
+nacos:
+  client:
+    config:
+      remote-first: true
