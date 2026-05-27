@@ -46,6 +46,15 @@ public enum PermissionType {
     }
 
     /**
+     * 判断是否为菜单类型
+     * 
+     * @return 是否为菜单类型
+     */
+    public boolean isMenuType() {
+        return this == MENU;
+    }
+
+    /**
      * 根据编码获取类型枚举
      *
      * @param code 类型编码

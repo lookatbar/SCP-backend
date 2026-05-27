@@ -5,8 +5,10 @@ import com.lookatbar.scp.basicdata.application.dto.LoginDTO;
 import com.lookatbar.scp.basicdata.application.dto.LoginResponseDTO;
 import com.lookatbar.scp.basicdata.application.dto.UserCreateDTO;
 import com.lookatbar.scp.basicdata.application.dto.UserDTO;
+import com.lookatbar.scp.basicdata.application.dto.UserNavDTO;
 import com.lookatbar.scp.basicdata.application.dto.UserUpdateDTO;
 import com.lookatbar.scp.basicdata.application.service.UserApplicationService;
+import com.lookatbar.scp.basicdata.infrastructure.context.UserContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,6 +46,34 @@ public class UserController {
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginDTO dto) {
         LoginResponseDTO response = userApplicationService.login(dto);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 获取当前用户信息
+     * 通过 UserContext 获取当前登录用户信息
+     * 
+     * @return 当前用户信息
+     */
+    @GetMapping("/info")
+    @Operation(summary = "获取当前用户信息", description = "获取当前登录用户的信息，包含角色和权限列表")
+    public ResponseEntity<UserDTO> getCurrentUserInfo() {
+        String userId = UserContext.getUserId();
+        UserDTO user = userApplicationService.getUserById(userId);
+        return ResponseEntity.ok(user);
+    }
+
+    /**
+     * 获取当前用户的导航菜单
+     * 通过 UserContext 获取当前登录用户的菜单权限
+     * 
+     * @return 用户导航DTO，包含用户信息和菜单列表
+     */
+    @GetMapping("/nav")
+    @Operation(summary = "获取当前用户导航菜单", description = "获取当前登录用户的菜单列表，用于动态生成侧边栏菜单")
+    public ResponseEntity<UserNavDTO> getCurrentUserNav() {
+        String token = UserContext.getUserInfo().getToken();
+        UserNavDTO nav = userApplicationService.getCurrentUserNav(token);
+        return ResponseEntity.ok(nav);
     }
 
     /**

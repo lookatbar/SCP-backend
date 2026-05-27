@@ -169,6 +169,17 @@ public class UserApplicationService {
     }
 
     /**
+     * 检查用户是否具有指定角色
+     * 
+     * @param userId 用户ID
+     * @param roleCode 角色编码
+     * @return 是否具有该角色
+     */
+    public boolean hasRole(String userId, String roleCode) {
+        return userDomainService.hasRole(userId, roleCode);
+    }
+
+    /**
      * 用户登录
      * 
      * @param dto 登录请求DTO，包含用户名和密码
@@ -216,5 +227,119 @@ public class UserApplicationService {
                 .roles(roleCodes)
                 .permissions(permissionCodes)
                 .build();
+    }
+
+    /**
+     * 获取当前用户信息（从JWT token解析用户ID）
+     * 
+     * @param token JWT令牌
+     * @return 当前用户信息DTO
+     */
+    public UserDTO getCurrentUserInfo(String token) {
+        String userId = jwtUtil.getUserIdFromToken(token);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("用户不存在"));
+        
+        UserDTO dto = UserDTO.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .realName(user.getRealName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .status(user.getStatus())
+                .build();
+        
+        // 获取用户角色列表
+        List<String> roleCodes = userDomainService.getUserRoles(userId).stream()
+                .map(Role::getCode)
+                .collect(Collectors.toList());
+        dto.setRoles(roleCodes.stream().map(code -> RoleDTO.builder().code(code).name(code).build()).collect(Collectors.toList()));
+        
+        // 获取用户权限列表
+        List<String> permissionCodes = userDomainService.getUserPermissions(userId).stream()
+                .map(Permission::getCode)
+                .collect(Collectors.toList());
+        dto.setPermissions(permissionCodes);
+        
+        return dto;
+    }
+
+    /**
+     * 获取当前用户的导航菜单
+     * 
+     * @param token JWT令牌
+     * @return 用户导航DTO，包含用户信息和菜单列表
+     */
+    public UserNavDTO getCurrentUserNav(String token) {
+        String userId = jwtUtil.getUserIdFromToken(token);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("用户不存在"));
+        
+        // 获取用户角色列表
+        List<String> roleCodes = userDomainService.getUserRoles(userId).stream()
+                .map(Role::getCode)
+                .collect(Collectors.toList());
+        
+        // 获取用户权限列表
+        List<Permission> permissions = userDomainService.getUserPermissions(userId);
+        List<String> permissionCodes = permissions.stream()
+                .map(Permission::getCode)
+                .collect(Collectors.toList());
+        
+        // 获取菜单类型的权限（构建菜单树）
+        List<UserNavDTO.MenuDTO> menus = buildMenuTree(permissions);
+        
+        return UserNavDTO.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .realName(user.getRealName())
+                .roles(roleCodes)
+                .permissions(permissionCodes)
+                .menus(menus)
+                .build();
+    }
+
+    /**
+     * 根据权限列表构建菜单树
+     * 
+     * @param permissions 权限列表
+     * @return 菜单树
+     */
+    private List<UserNavDTO.MenuDTO> buildMenuTree(List<Permission> permissions) {
+        // 过滤出菜单类型的权限
+        List<Permission> menuPermissions = permissions.stream()
+                .filter(p -> p.getType() != null && p.getType().isMenuType())
+                .collect(Collectors.toList());
+        
+        return menuPermissions.stream()
+                .map(this::convertToMenuDTO)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 将权限转换为菜单DTO
+     * 
+     * @param permission 权限
+     * @return 菜单DTO
+     */
+    private UserNavDTO.MenuDTO convertToMenuDTO(Permission permission) {
+        UserNavDTO.MenuDTO.MenuDTOBuilder builder = UserNavDTO.MenuDTO.builder()
+                .id(permission.getId())
+                .path(permission.getPath() != null ? permission.getPath() : "/")
+                .name(permission.getCode())
+                .title(permission.getName())
+                .icon(permission.getDescription()) // 暂时用description作为icon
+                .parentId(permission.getParentId())
+                .hidden(false);
+        
+        // 如果有子权限，递归转换
+        if (permission.getChildren() != null && !permission.getChildren().isEmpty()) {
+            List<UserNavDTO.MenuDTO> children = permission.getChildren().stream()
+                    .map(this::convertToMenuDTO)
+                    .collect(Collectors.toList());
+            builder.children(children);
+        }
+        
+        return builder.build();
     }
 }

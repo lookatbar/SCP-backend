@@ -1,11 +1,9 @@
 package com.lookatbar.scp.basicdata.api.interceptor;
 
 import com.lookatbar.scp.basicdata.api.annotation.RequiresPermission;
-import com.lookatbar.scp.basicdata.application.service.UserApplicationService;
+import com.lookatbar.scp.basicdata.infrastructure.context.UserContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,38 +18,13 @@ import java.lang.reflect.Method;
  * <ol>
  *   <li>检查请求是否为Controller方法调用</li>
  *   <li>查找方法或类上的@RequiresPermission注解</li>
- *   <li>从请求头获取用户ID</li>
+ *   <li>从 UserContext 获取用户信息</li>
  *   <li>校验用户是否具有所需权限</li>
  *   <li>根据校验结果允许或拒绝请求</li>
  * </ol>
  */
 @Component
 public class PermissionInterceptor implements HandlerInterceptor {
-
-    /**
-     * Spring应用上下文，用于动态获取Bean（解决循环依赖）
-     */
-    private final ApplicationContext applicationContext;
-
-    /**
-     * 构造函数
-     * 使用@Lazy注解延迟加载，解决循环依赖问题
-     *
-     * @param applicationContext Spring应用上下文
-     */
-    public PermissionInterceptor(@Lazy ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
-
-    /**
-     * 动态获取UserApplicationService
-     * 通过ApplicationContext动态获取Bean，避免循环依赖
-     *
-     * @return UserApplicationService实例
-     */
-    private UserApplicationService getUserApplicationService() {
-        return applicationContext.getBean(UserApplicationService.class);
-    }
 
     /**
      * 请求前置拦截处理
@@ -86,11 +59,15 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 从请求头获取用户ID
-        String userId = request.getHeader("X-User-Id");
-        if (userId == null || userId.isEmpty()) {
+        // 从 UserContext 获取用户信息
+        if (!UserContext.isLoggedIn()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
+        }
+
+        // 超级管理员直接放行，不需要权限校验
+        if (UserContext.hasRole("SUPER_ADMIN")) {
+            return true;
         }
 
         String[] permissionCodes = requiresPermission.value();
@@ -99,9 +76,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
         // 根据逻辑运算符校验权限
         boolean hasPermission;
         if (logical == RequiresPermission.Logical.AND) {
-            hasPermission = checkAllPermissions(userId, permissionCodes);
+            hasPermission = checkAllPermissions(permissionCodes);
         } else {
-            hasPermission = checkAnyPermission(userId, permissionCodes);
+            hasPermission = checkAnyPermission(permissionCodes);
         }
 
         // 权限不足时拒绝请求
@@ -116,14 +93,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
     /**
      * 检查用户是否具有所有指定权限（AND逻辑）
      *
-     * @param userId         用户ID
      * @param permissionCodes 权限编码数组
      * @return 是否具有所有权限
      */
-    private boolean checkAllPermissions(String userId, String[] permissionCodes) {
-        UserApplicationService service = getUserApplicationService();
+    private boolean checkAllPermissions(String[] permissionCodes) {
         for (String code : permissionCodes) {
-            if (!service.hasPermission(userId, code)) {
+            if (!UserContext.hasPermission(code)) {
                 return false;
             }
         }
@@ -133,14 +108,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
     /**
      * 检查用户是否具有任一指定权限（OR逻辑）
      *
-     * @param userId         用户ID
      * @param permissionCodes 权限编码数组
      * @return 是否具有任一权限
      */
-    private boolean checkAnyPermission(String userId, String[] permissionCodes) {
-        UserApplicationService service = getUserApplicationService();
+    private boolean checkAnyPermission(String[] permissionCodes) {
         for (String code : permissionCodes) {
-            if (service.hasPermission(userId, code)) {
+            if (UserContext.hasPermission(code)) {
                 return true;
             }
         }

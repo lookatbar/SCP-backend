@@ -2,11 +2,19 @@
 -- BasicData 模块 RBAC3 权限管理系统初始化数据
 -- ============================================
 
--- 初始化角色数据（使用 UUID）
+-- 初始化角色数据（使用固定 UUID 便于关联）
 INSERT INTO `basicdata_role` (`id`, `name`, `code`, `description`, `created_by`, `modified_by`) VALUES
-(UUID(), '超级管理员', 'SUPER_ADMIN', '拥有所有权限', 'system', 'system'),
-(UUID(), '管理员', 'ADMIN', '拥有管理权限', 'system', 'system'),
-(UUID(), '普通用户', 'USER', '拥有基础权限', 'system', 'system');
+('00000000-0000-0000-0000-000000000001', '超级管理员', 'SUPER_ADMIN', '拥有所有权限', 'system', 'system'),
+('00000000-0000-0000-0000-000000000002', '管理员', 'ADMIN', '拥有管理权限', 'system', 'system'),
+('00000000-0000-0000-0000-000000000003', '普通用户', 'USER', '拥有基础权限', 'system', 'system');
+
+-- 初始化管理员用户（密码：admin123，已通过 BCrypt 加密）
+INSERT INTO `basicdata_user` (`id`, `username`, `password`, `email`, `phone`, `real_name`, `status`, `created_by`, `modified_by`) VALUES
+('00000000-0000-0000-0000-000000000001', 'admin', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IjzqAKL9xL5jvMFVdNJHvGCgTq/VEq', 'admin@lookatbar.com', '13800138000', '系统管理员', 1, 'system', 'system');
+
+-- 为管理员用户分配超级管理员角色
+INSERT INTO `basicdata_user_role` (`id`, `user_id`, `role_id`, `created_by`, `modified_by`) VALUES
+(UUID(), '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001', 'system', 'system');
 
 -- 初始化权限数据
 INSERT INTO `basicdata_permission` (`id`, `name`, `code`, `type`, `parent_id`, `path`, `method`, `description`, `created_by`, `modified_by`) VALUES
@@ -26,3 +34,7 @@ INSERT INTO `basicdata_permission` (`id`, `name`, `code`, `type`, `parent_id`, `
 (UUID(), '权限创建', 'sys:permission:create', 2, (SELECT id FROM (SELECT id FROM basicdata_permission WHERE code = 'sys:permission:manage') AS tmp), '/api/permissions', 'POST', '创建权限', 'system', 'system'),
 (UUID(), '权限更新', 'sys:permission:update', 2, (SELECT id FROM (SELECT id FROM basicdata_permission WHERE code = 'sys:permission:manage') AS tmp), '/api/permissions/{id}', 'PUT', '更新权限', 'system', 'system'),
 (UUID(), '权限删除', 'sys:permission:delete', 2, (SELECT id FROM (SELECT id FROM basicdata_permission WHERE code = 'sys:permission:manage') AS tmp), '/api/permissions/{id}', 'DELETE', '删除权限', 'system', 'system');
+
+-- 为超级管理员角色分配所有权限
+INSERT INTO `basicdata_role_permission` (`id`, `role_id`, `permission_id`, `created_by`, `modified_by`)
+SELECT UUID(), '00000000-0000-0000-0000-000000000001', `id`, 'system', 'system' FROM `basicdata_permission`;

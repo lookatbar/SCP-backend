@@ -160,6 +160,18 @@ public class UserDomainService {
     }
 
     /**
+     * 检查用户是否具有指定角色
+     * 
+     * @param userId 用户ID
+     * @param roleCode 角色编码
+     * @return 是否具有该角色
+     */
+    public boolean hasRole(String userId, String roleCode) {
+        return roleRepository.findByUserId(userId).stream()
+                .anyMatch(role -> role.getCode().equals(roleCode));
+    }
+
+    /**
      * 获取用户的权限列表（含继承权限）
      * 
      * @param userId 用户ID

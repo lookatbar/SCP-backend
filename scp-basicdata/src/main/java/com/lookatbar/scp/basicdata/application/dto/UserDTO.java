@@ -20,7 +20,7 @@ public class UserDTO {
     /**
      * 用户ID（UUID）
      */
-    private String id;
+    private String userId;
 
     /**
      * 用户名
@@ -66,4 +66,9 @@ public class UserDTO {
      * 用户角色列表
      */
     private List<RoleDTO> roles;
+
+    /**
+     * 用户权限列表
+     */
+    private List<String> permissions;
 }
