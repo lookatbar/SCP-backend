@@ -1,5 +1,6 @@
 package com.lookatbar.scp.basicdata.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -63,12 +64,19 @@ public class UserDTO {
     private LocalDateTime updatedAt;
 
     /**
-     * 用户角色列表
+     * 用户角色列表（字符串数组，前端期望格式）
      */
-    private List<RoleDTO> roles;
+    private List<String> roles;
 
     /**
-     * 用户权限列表
+     * 用户角色详细信息列表
      */
+    @JsonProperty("roleList")
+    private List<RoleDTO> roleList;
+
+    /**
+     * 用户权限列表（前端期望字段名 permissions）
+     */
+    @JsonProperty("permissions")
     private List<String> permissions;
 }

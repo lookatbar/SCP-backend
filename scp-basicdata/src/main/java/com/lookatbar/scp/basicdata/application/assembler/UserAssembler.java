@@ -65,7 +65,7 @@ public class UserAssembler {
      */
     public UserDTO toDTO(User user) {
         return UserDTO.builder()
-                .id(user.getId())
+                .userId(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .phone(user.getPhone())

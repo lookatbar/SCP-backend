@@ -1,6 +1,7 @@
 package com.lookatbar.scp.basicdata.api.interceptor;
 
 import com.lookatbar.scp.basicdata.api.annotation.RequiresPermission;
+import com.lookatbar.scp.basicdata.domain.model.role.RoleCode;
 import com.lookatbar.scp.basicdata.infrastructure.context.UserContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -66,7 +67,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         }
 
         // 超级管理员直接放行，不需要权限校验
-        if (UserContext.hasRole("SUPER_ADMIN")) {
+        if (UserContext.hasRole(RoleCode.SUPER_ADMIN.getCode())) {
             return true;
         }
 

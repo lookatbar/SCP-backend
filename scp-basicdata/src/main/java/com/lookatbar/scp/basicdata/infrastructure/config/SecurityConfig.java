@@ -1,6 +1,8 @@
 package com.lookatbar.scp.basicdata.infrastructure.config;
 
 import com.lookatbar.scp.basicdata.api.interceptor.PermissionInterceptor;
+import com.lookatbar.scp.basicdata.api.interceptor.UserContextInterceptor;
+import com.lookatbar.scp.basicdata.application.service.UserApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +53,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                         "/v3/api-docs/**",
                         "/webjars/**"
                 );
+
+
     }
 
     /**

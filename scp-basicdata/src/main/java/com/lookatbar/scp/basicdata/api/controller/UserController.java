@@ -57,8 +57,8 @@ public class UserController {
     @GetMapping("/info")
     @Operation(summary = "获取当前用户信息", description = "获取当前登录用户的信息，包含角色和权限列表")
     public ResponseEntity<UserDTO> getCurrentUserInfo() {
-        String userId = UserContext.getUserId();
-        UserDTO user = userApplicationService.getUserById(userId);
+
+        UserDTO user = userApplicationService.getCurrentUserInfo();
         return ResponseEntity.ok(user);
     }
 
@@ -71,8 +71,7 @@ public class UserController {
     @GetMapping("/nav")
     @Operation(summary = "获取当前用户导航菜单", description = "获取当前登录用户的菜单列表，用于动态生成侧边栏菜单")
     public ResponseEntity<UserNavDTO> getCurrentUserNav() {
-        String token = UserContext.getUserInfo().getToken();
-        UserNavDTO nav = userApplicationService.getCurrentUserNav(token);
+        UserNavDTO nav = userApplicationService.getCurrentUserNav();
         return ResponseEntity.ok(nav);
     }
 

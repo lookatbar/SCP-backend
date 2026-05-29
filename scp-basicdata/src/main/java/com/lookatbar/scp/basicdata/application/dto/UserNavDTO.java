@@ -66,6 +66,11 @@ public class UserNavDTO {
         private String id;
 
         /**
+         * 权限编码
+         */
+        private String key;
+
+        /**
          * 菜单路径
          */
         private String path;

@@ -30,6 +30,7 @@ public class PermissionAssembler {
                 .path(dto.getPath())
                 .method(dto.getMethod())
                 .description(dto.getDescription())
+                .extInfo(dto.getExtInfo())
                 .sortOrder(dto.getSortOrder() != null ? dto.getSortOrder() : 0)
                 .status(PermissionStatus.ENABLED)
                 .build();
@@ -49,6 +50,7 @@ public class PermissionAssembler {
                 .path(dto.getPath())
                 .method(dto.getMethod())
                 .description(dto.getDescription())
+                .extInfo(dto.getExtInfo())
                 .sortOrder(dto.getSortOrder())
                 .build();
 
@@ -88,6 +90,7 @@ public class PermissionAssembler {
                 .path(permission.getPath())
                 .method(permission.getMethod())
                 .description(permission.getDescription())
+                .extInfo(permission.getExtInfo())
                 .sortOrder(permission.getSortOrder())
                 .status(permission.getStatus() != null ? permission.getStatus().getCode() : null)
                 .statusDescription(permission.getStatus() != null ? permission.getStatus().getDescription() : null)

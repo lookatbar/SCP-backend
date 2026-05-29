@@ -63,6 +63,11 @@ public class PermissionDTO {
     private String description;
 
     /**
+     * 扩展信息（JSON格式，存储权限相关的额外配置）
+     */
+    private String extInfo;
+
+    /**
      * 排序序号
      */
     private Integer sortOrder;

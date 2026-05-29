@@ -1,9 +1,12 @@
 package com.lookatbar.scp.basicdata.domain.model.role;
 
+import lombok.Getter;
+
 /**
  * 角色状态枚举
  * 定义角色的启用/禁用状态
  */
+@Getter
 public enum RoleStatus {
 
     /**
@@ -18,11 +21,21 @@ public enum RoleStatus {
 
     /**
      * 状态编码
+     * -- GETTER --
+     *  获取状态编码
+     *
+     * @return 状态编码
+
      */
     private final int code;
 
     /**
      * 状态描述
+     * -- GETTER --
+     *  获取状态描述
+     *
+     * @return 状态描述
+
      */
     private final String description;
 
@@ -35,24 +48,6 @@ public enum RoleStatus {
     RoleStatus(int code, String description) {
         this.code = code;
         this.description = description;
-    }
-
-    /**
-     * 获取状态编码
-     *
-     * @return 状态编码
-     */
-    public int getCode() {
-        return code;
-    }
-
-    /**
-     * 获取状态描述
-     *
-     * @return 状态描述
-     */
-    public String getDescription() {
-        return description;
     }
 
     /**

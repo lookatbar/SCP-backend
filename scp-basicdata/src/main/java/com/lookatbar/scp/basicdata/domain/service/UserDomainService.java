@@ -180,4 +180,12 @@ public class UserDomainService {
     public List<Permission> getUserPermissions(String userId) {
         return permissionRepository.findByUserId(userId);
     }
+
+    /**
+     * 获取所有权限点
+     * @return
+     */
+    public List<Permission> getAllPermissions(){
+        return permissionRepository.findAll();
+    }
 }

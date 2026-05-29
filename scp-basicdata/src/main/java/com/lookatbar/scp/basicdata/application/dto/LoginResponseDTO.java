@@ -1,5 +1,6 @@
 package com.lookatbar.scp.basicdata.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -60,5 +61,6 @@ public class LoginResponseDTO {
     /**
      * 用户权限列表
      */
+    @JsonProperty("permissionList")
     private List<String> permissions;
 }

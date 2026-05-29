@@ -1,5 +1,7 @@
 package com.lookatbar.scp.basicdata.infrastructure.context;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.lookatbar.scp.basicdata.domain.model.role.RoleCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,4 +46,13 @@ public class UserInfo {
      * 用户权限列表
      */
     private java.util.List<String> permissions;
+
+
+    /**
+     * 判断是否超级管理员
+     * @return
+     */
+    public boolean isSuperAdmin() {
+        return CollectionUtil.isNotEmpty(this.roles) && this.roles.contains(RoleCode.SUPER_ADMIN.getCode());
+    }
 }

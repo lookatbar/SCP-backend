@@ -71,6 +71,12 @@ public class PermissionPO {
     private String description;
 
     /**
+     * 扩展信息（JSON格式，存储权限相关的额外配置）
+     */
+    @TableField("ext_info")
+    private String extInfo;
+
+    /**
      * 排序序号
      */
     @TableField("sort_order")

@@ -56,6 +56,12 @@ public class PermissionCreateDTO {
     private String description;
 
     /**
+     * 扩展信息（JSON格式，存储权限相关的额外配置，最大1024字符）
+     */
+    @Size(max = 1024, message = "扩展信息长度不能超过1024字符")
+    private String extInfo;
+
+    /**
      * 排序序号
      */
     private Integer sortOrder;

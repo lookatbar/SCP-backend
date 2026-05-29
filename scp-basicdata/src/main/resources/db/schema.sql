@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `basicdata_permission` (
     `path` VARCHAR(255) COMMENT '权限路径（URL）',
     `method` VARCHAR(16) COMMENT 'HTTP 方法（GET/POST/PUT/DELETE）',
     `description` VARCHAR(512) COMMENT '权限描述',
+    `ext_info` VARCHAR(1024) COMMENT '扩展信息（JSON格式，存储权限相关的额外配置）',
     `sort_order` INT DEFAULT 0 COMMENT '排序号',
     `status` TINYINT(1) UNSIGNED DEFAULT 1 COMMENT '状态：0-禁用，1-启用',
     `created_by` CHAR(36) NOT NULL COMMENT '创建者 ID',

@@ -2,6 +2,8 @@ package com.lookatbar.scp.basicdata.api.interceptor;
 
 import com.lookatbar.scp.basicdata.domain.model.permission.Permission;
 import com.lookatbar.scp.basicdata.domain.model.role.Role;
+import com.lookatbar.scp.basicdata.domain.model.role.RoleCode;
+import com.lookatbar.scp.basicdata.domain.repository.PermissionRepository;
 import com.lookatbar.scp.basicdata.domain.repository.UserRepository;
 import com.lookatbar.scp.basicdata.domain.service.UserDomainService;
 import com.lookatbar.scp.basicdata.infrastructure.context.UserInfo;
@@ -19,10 +21,17 @@ import java.util.stream.Collectors;
 /**
  * 用户上下文拦截器
  * 从请求头 Authorization 中解析 JWT token，提取用户信息并设置到 UserContext
+ * 
+ * <p>特殊处理：
+ * <ul>
+ *   <li>超级管理员（角色编码为 SUPER_ADMIN）自动拥有所有权限</li>
+ * </ul>
  */
 @Component
 @RequiredArgsConstructor
 public class UserContextInterceptor implements HandlerInterceptor {
+
+    
 
     /**
      * JWT工具类
@@ -38,6 +47,11 @@ public class UserContextInterceptor implements HandlerInterceptor {
      * 用户领域服务
      */
     private final UserDomainService userDomainService;
+
+    /**
+     * 权限仓储
+     */
+    private final PermissionRepository permissionRepository;
 
     /**
      * 请求前置拦截处理
@@ -60,17 +74,28 @@ public class UserContextInterceptor implements HandlerInterceptor {
                 String userId = jwtUtil.getUserIdFromToken(token);
                 String username = jwtUtil.getUsernameFromToken(token);
                 
-                // 获取用户角色和权限
+                // 获取用户角色
                 List<Role> roles = userDomainService.getUserRoles(userId);
-                List<Permission> permissions = userDomainService.getUserPermissions(userId);
                 
                 List<String> roleCodes = roles.stream()
                         .map(Role::getCode)
                         .collect(Collectors.toList());
                 
-                List<String> permissionCodes = permissions.stream()
-                        .map(Permission::getCode)
-                        .collect(Collectors.toList());
+                // 获取用户权限：超级管理员拥有所有权限
+                List<String> permissionCodes;
+                if (roleCodes.contains(RoleCode.SUPER_ADMIN.getCode())) {
+                    // 超级管理员获取所有权限
+                    List<Permission> allPermissions = permissionRepository.findAll();
+                    permissionCodes = allPermissions.stream()
+                            .map(Permission::getCode)
+                            .collect(Collectors.toList());
+                } else {
+                    // 普通用户获取关联权限
+                    List<Permission> permissions = userDomainService.getUserPermissions(userId);
+                    permissionCodes = permissions.stream()
+                            .map(Permission::getCode)
+                            .collect(Collectors.toList());
+                }
                 
                 // 获取用户真实姓名
                 String realName = userRepository.findById(userId)
