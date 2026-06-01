@@ -44,4 +44,9 @@ public class UserCreateDTO {
      * 真实姓名
      */
     private String realName;
+
+    /**
+     * 创建者ID（可选，不传则从上下文获取）
+     */
+    private String createdBy;
 }

@@ -1,3 +1,6 @@
 /scp-*/target/
 /logs/
 /scp-basicdata/target/
+/ci/init-database.ps1
+/ci/init-database.sql
+/ci/数据库建表自检报告.md

@@ -67,4 +67,9 @@ public class PermissionUpdateDTO {
      * 状态：0-禁用，1-启用
      */
     private Integer status;
+
+    /**
+     * 修改者ID（可选，不传则从上下文获取）
+     */
+    private String modifiedBy;
 }

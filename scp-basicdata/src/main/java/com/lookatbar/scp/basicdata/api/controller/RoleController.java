@@ -1,8 +1,10 @@
 package com.lookatbar.scp.basicdata.api.controller;
 
 import com.lookatbar.scp.basicdata.application.dto.AssignPermissionDTO;
+import com.lookatbar.scp.basicdata.application.dto.PageResponseDTO;
 import com.lookatbar.scp.basicdata.application.dto.RoleCreateDTO;
 import com.lookatbar.scp.basicdata.application.dto.RoleDTO;
+import com.lookatbar.scp.basicdata.application.dto.RoleQueryDTO;
 import com.lookatbar.scp.basicdata.application.dto.RoleUpdateDTO;
 import com.lookatbar.scp.basicdata.application.service.RoleApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,15 +87,17 @@ public class RoleController {
     }
 
     /**
-     * 查询所有角色
+     * 查询所有角色（支持条件过滤和分页）
+     * 使用统一的Query DTO接收查询参数，提高扩展性和可维护性
      * 
-     * @return 角色列表
+     * @param queryDTO 角色查询条件DTO，包含名称、编码、状态、分页等参数
+     * @return 分页角色列表
      */
     @GetMapping
-    @Operation(summary = "查询所有角色", description = "获取系统中所有角色列表")
-    public ResponseEntity<List<RoleDTO>> getAllRoles() {
-        List<RoleDTO> roles = roleApplicationService.getAllRoles();
-        return ResponseEntity.ok(roles);
+    @Operation(summary = "分页查询角色", description = "根据条件过滤分页查询角色列表，支持名称、编码、状态筛选")
+    public ResponseEntity<PageResponseDTO<RoleDTO>> queryRoles(@ModelAttribute RoleQueryDTO queryDTO) {
+        PageResponseDTO<RoleDTO> result = roleApplicationService.queryRoles(queryDTO);
+        return ResponseEntity.ok(result);
     }
 
     /**

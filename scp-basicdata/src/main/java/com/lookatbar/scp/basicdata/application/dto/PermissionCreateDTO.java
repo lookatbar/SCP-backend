@@ -65,4 +65,9 @@ public class PermissionCreateDTO {
      * 排序序号
      */
     private Integer sortOrder;
+
+    /**
+     * 创建者ID（可选，不传则从上下文获取）
+     */
+    private String createdBy;
 }

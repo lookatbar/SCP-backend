@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * 用户领域对象与DTO转换器
  * 负责User领域模型与UserDTO、UserCreateDTO、UserUpdateDTO之间的转换
+ * 审计字段由AuditService统一处理
  */
 @Component
 public class UserAssembler {

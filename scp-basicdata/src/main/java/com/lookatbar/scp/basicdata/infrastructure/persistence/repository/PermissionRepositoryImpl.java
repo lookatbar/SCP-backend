@@ -8,6 +8,7 @@ import com.lookatbar.scp.basicdata.infrastructure.persistence.mapper.PermissionM
 import com.lookatbar.scp.basicdata.infrastructure.persistence.mapper.RolePermissionMapper;
 import com.lookatbar.scp.basicdata.infrastructure.persistence.mapper.UserRoleMapper;
 import com.lookatbar.scp.basicdata.infrastructure.persistence.po.PermissionPO;
+import com.lookatbar.scp.basicdata.infrastructure.util.BeanConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 权限仓储实现类
  * 基于MyBatis Plus实现权限数据访问，包括权限分配关系管理
+ * 使用 BeanConverter 简化对象转换逻辑
  */
 @Repository
 @RequiredArgsConstructor
@@ -221,49 +223,42 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     /**
      * 将领域模型转换为持久化对象
+     * 使用 BeanConverter 进行属性复制，简化代码
      *
      * @param permission 权限领域模型
      * @return 权限持久化对象
      */
     private PermissionPO toPO(Permission permission) {
-        return PermissionPO.builder()
-                .id(permission.getId())
-                .name(permission.getName())
-                .code(permission.getCode())
-                .type(permission.getType() != null ? permission.getType().getCode() : null)
-                .parentId(permission.getParentId())
-                .path(permission.getPath())
-                .method(permission.getMethod())
-                .description(permission.getDescription())
-                .extInfo(permission.getExtInfo())
-                .sortOrder(permission.getSortOrder())
-                .status(permission.getStatus() != null ? permission.getStatus().getCode() : null)
-                .createdTime(permission.getCreatedTime())
-                .modifiedTime(permission.getModifiedTime())
-                .build();
+        PermissionPO po = BeanConverter.convert(permission, PermissionPO.class);
+        // 处理枚举类型转换
+        if (permission.getType() != null) {
+            po.setType(permission.getType().getCode());
+        }
+        if (permission.getStatus() != null) {
+            po.setStatus(permission.getStatus().getCode());
+        }
+        return po;
     }
 
     /**
      * 将持久化对象转换为领域模型
+     * 使用 BeanConverter 进行属性复制，简化代码
      *
      * @param po 权限持久化对象
      * @return 权限领域模型
      */
     private Permission toDomain(PermissionPO po) {
-        return Permission.builder()
-                .id(po.getId())
-                .name(po.getName())
-                .code(po.getCode())
-                .type(po.getType() != null ? PermissionType.fromCode(po.getType()) : null)
-                .parentId(po.getParentId())
-                .path(po.getPath())
-                .method(po.getMethod())
-                .description(po.getDescription())
-                .extInfo(po.getExtInfo())
-                .sortOrder(po.getSortOrder())
-                .status(po.getStatus() != null ? PermissionStatus.fromCode(po.getStatus()) : null)
-                .createdTime(po.getCreatedTime())
-                .modifiedTime(po.getModifiedTime())
-                .build();
+        if (po == null) {
+            return null;
+        }
+        Permission permission = BeanConverter.convert(po, Permission.class);
+        // 处理枚举类型转换
+        if (po.getType() != null) {
+            permission.setType(PermissionType.fromCode(po.getType()));
+        }
+        if (po.getStatus() != null) {
+            permission.setStatus(PermissionStatus.fromCode(po.getStatus()));
+        }
+        return permission;
     }
 }

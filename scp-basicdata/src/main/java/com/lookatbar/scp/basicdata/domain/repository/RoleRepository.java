@@ -120,4 +120,20 @@ public interface RoleRepository {
      * @param childRoleId  子角色ID
      */
     void removeRoleHierarchy(String parentRoleId, String childRoleId);
+
+    /**
+     * 条件过滤分页查询角色
+     *
+     * @param condition 查询条件
+     * @return 角色列表
+     */
+    List<Role> findByCondition(RoleQueryCondition condition);
+
+    /**
+     * 条件过滤统计角色数量
+     *
+     * @param condition 查询条件
+     * @return 角色数量
+     */
+    long countByCondition(RoleQueryCondition condition);
 }

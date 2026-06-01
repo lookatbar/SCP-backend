@@ -3,11 +3,15 @@ package com.lookatbar.scp.basicdata.application.service;
 import com.lookatbar.scp.basicdata.application.assembler.PermissionAssembler;
 import com.lookatbar.scp.basicdata.application.assembler.RoleAssembler;
 import com.lookatbar.scp.basicdata.application.dto.AssignPermissionDTO;
+import com.lookatbar.scp.basicdata.application.dto.PageResponseDTO;
 import com.lookatbar.scp.basicdata.application.dto.RoleCreateDTO;
 import com.lookatbar.scp.basicdata.application.dto.RoleDTO;
+import com.lookatbar.scp.basicdata.application.dto.RoleQueryDTO;
 import com.lookatbar.scp.basicdata.application.dto.RoleUpdateDTO;
 import com.lookatbar.scp.basicdata.domain.model.role.Role;
+import com.lookatbar.scp.basicdata.domain.repository.RoleQueryCondition;
 import com.lookatbar.scp.basicdata.domain.repository.RoleRepository;
+import com.lookatbar.scp.basicdata.domain.service.AuditService;
 import com.lookatbar.scp.basicdata.domain.service.RoleDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,6 +49,11 @@ public class RoleApplicationService {
     private final PermissionAssembler permissionAssembler;
 
     /**
+     * 审计字段处理服务
+     */
+    private final AuditService auditService;
+
+    /**
      * 创建角色
      * 
      * @param dto 角色创建请求DTO
@@ -53,6 +62,7 @@ public class RoleApplicationService {
     @Transactional
     public RoleDTO createRole(RoleCreateDTO dto) {
         Role role = roleAssembler.toDomain(dto);
+        auditService.setCreateInfo(role, dto.getCreatedBy());
         Role savedRole = roleDomainService.createRole(role);
         return roleAssembler.toDTO(savedRole);
     }
@@ -67,6 +77,7 @@ public class RoleApplicationService {
     @Transactional
     public RoleDTO updateRole(String id, RoleUpdateDTO dto) {
         Role role = roleAssembler.toDomain(id, dto);
+        auditService.setUpdateInfo(role, dto.getModifiedBy());
         Role updatedRole = roleDomainService.updateRole(role);
         return roleAssembler.toDTO(updatedRole);
     }
@@ -173,5 +184,44 @@ public class RoleApplicationService {
      */
     public boolean hasPermission(String roleId, String permissionCode) {
         return roleDomainService.hasPermission(roleId, permissionCode);
+    }
+
+    /**
+     * 条件过滤分页查询角色
+     * 
+     * @param queryDTO 查询条件DTO
+     * @return 分页响应DTO
+     */
+    public PageResponseDTO<RoleDTO> queryRoles(RoleQueryDTO queryDTO) {
+        // 设置默认分页参数
+        int page = queryDTO.getPage() != null && queryDTO.getPage() > 0 ? queryDTO.getPage() : 1;
+        int pageSize = queryDTO.getPageSize() != null && queryDTO.getPageSize() > 0 ? queryDTO.getPageSize() : 10;
+        int offset = (page - 1) * pageSize;
+
+        // 构建查询条件
+        RoleQueryCondition condition = new RoleQueryCondition(
+                queryDTO.getName(),
+                queryDTO.getCode(),
+                queryDTO.getStatus(),
+                offset,
+                pageSize
+        );
+
+        // 查询数据
+        List<Role> roles = roleRepository.findByCondition(condition);
+        long total = roleRepository.countByCondition(condition);
+
+        // 转换为DTO并填充权限信息
+        List<RoleDTO> roleDTOs = roles.stream()
+                .map(role -> {
+                    RoleDTO dto = roleAssembler.toDTO(role);
+                    dto.setPermissions(roleDomainService.getRolePermissions(role.getId()).stream()
+                            .map(permissionAssembler::toDTO)
+                            .collect(Collectors.toList()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return PageResponseDTO.of(roleDTOs, total, page, pageSize);
     }
 }

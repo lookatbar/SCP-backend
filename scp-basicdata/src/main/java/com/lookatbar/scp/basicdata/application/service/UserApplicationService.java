@@ -10,6 +10,7 @@ import com.lookatbar.scp.basicdata.domain.model.role.Role;
 import com.lookatbar.scp.basicdata.domain.model.role.RoleCode;
 import com.lookatbar.scp.basicdata.domain.model.user.User;
 import com.lookatbar.scp.basicdata.domain.repository.UserRepository;
+import com.lookatbar.scp.basicdata.domain.service.AuditService;
 import com.lookatbar.scp.basicdata.domain.service.UserDomainService;
 import com.lookatbar.scp.basicdata.infrastructure.context.UserContext;
 import com.lookatbar.scp.basicdata.infrastructure.context.UserInfo;
@@ -68,6 +69,11 @@ public class UserApplicationService {
     private final JwtUtil jwtUtil;
 
     /**
+     * 审计字段处理服务
+     */
+    private final AuditService auditService;
+
+    /**
      * 创建用户
      *
      * @param dto 用户创建请求DTO
@@ -77,6 +83,7 @@ public class UserApplicationService {
     public UserDTO createUser(UserCreateDTO dto) {
         User user = userAssembler.toDomain(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        auditService.setCreateInfo(user, dto.getCreatedBy());
         User savedUser = userDomainService.createUser(user);
         return userAssembler.toDTO(savedUser);
     }
@@ -94,6 +101,7 @@ public class UserApplicationService {
             dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         User user = userAssembler.toDomain(id, dto);
+        auditService.setUpdateInfo(user, dto.getModifiedBy());
         User updatedUser = userDomainService.updateUser(user);
         return userAssembler.toDTO(updatedUser);
     }

@@ -1,23 +1,26 @@
 package com.lookatbar.scp.basicdata.domain.model.permission;
 
+import com.lookatbar.scp.basicdata.domain.model.common.BaseAuditableEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 权限实体
  * 表示系统中的权限定义，支持树形结构（父子关系）
+ * 继承 BaseAuditableEntity 获得统一的审计字段
  */
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Permission {
+public class Permission extends BaseAuditableEntity {
 
     /**
      * 权限ID（UUID）
@@ -75,34 +78,8 @@ public class Permission {
     private PermissionStatus status;
 
     /**
-     * 创建人ID
-     */
-    private String createdBy;
-
-    /**
-     * 修改人ID
-     */
-    private String modifiedBy;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createdTime;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime modifiedTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updatedTime;
-
-    /**
      * 子权限列表（树形结构）
      */
-    @Builder.Default
     private List<Permission> children = new ArrayList<>();
 
     /**
@@ -120,6 +97,17 @@ public class Permission {
     }
 
     /**
+     * 移除子权限
+     *
+     * @param child 子权限对象
+     */
+    public void removeChild(Permission child) {
+        if (children != null) {
+            children.remove(child);
+        }
+    }
+
+    /**
      * 启用权限
      */
     public void enable() {
@@ -131,5 +119,41 @@ public class Permission {
      */
     public void disable() {
         this.status = PermissionStatus.DISABLED;
+    }
+
+    /**
+     * 检查权限是否启用
+     *
+     * @return true-启用，false-禁用
+     */
+    public boolean isEnabled() {
+        return this.status == PermissionStatus.ENABLED;
+    }
+
+    /**
+     * 检查是否为菜单类型
+     *
+     * @return true-菜单类型
+     */
+    public boolean isMenu() {
+        return this.type == PermissionType.MENU;
+    }
+
+    /**
+     * 检查是否为按钮类型
+     *
+     * @return true-按钮类型
+     */
+    public boolean isButton() {
+        return this.type == PermissionType.BUTTON;
+    }
+
+    /**
+     * 检查是否为API类型
+     *
+     * @return true-API类型
+     */
+    public boolean isApi() {
+        return this.type == PermissionType.API;
     }
 }

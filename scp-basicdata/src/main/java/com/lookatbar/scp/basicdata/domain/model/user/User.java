@@ -1,24 +1,27 @@
 package com.lookatbar.scp.basicdata.domain.model.user;
 
+import com.lookatbar.scp.basicdata.domain.model.common.BaseAuditableEntity;
 import com.lookatbar.scp.basicdata.domain.model.role.Role;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 用户聚合根
  * 表示系统中的用户实体，包含用户基本信息和角色关联关系
+ * 继承 BaseAuditableEntity 获得统一的审计字段
  */
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends BaseAuditableEntity {
 
     /**
      * 用户ID（UUID）
@@ -56,34 +59,8 @@ public class User {
     private UserStatus status;
 
     /**
-     * 创建人ID
-     */
-    private String createdBy;
-
-    /**
-     * 修改人ID
-     */
-    private String modifiedBy;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createdTime;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime modifiedTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updatedTime;
-
-    /**
      * 用户关联的角色列表
      */
-    @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
     /**
@@ -101,7 +78,7 @@ public class User {
     }
 
     /**
-     * 移除用户的指定角色
+     * 为用户移除角色
      *
      * @param role 角色对象
      */
@@ -109,34 +86,6 @@ public class User {
         if (roles != null) {
             roles.remove(role);
         }
-    }
-
-    /**
-     * 检查用户是否具有指定角色
-     *
-     * @param roleCode 角色编码
-     * @return 是否具有该角色
-     */
-    public boolean hasRole(String roleCode) {
-        if (roles == null) {
-            return false;
-        }
-        return roles.stream()
-                .anyMatch(role -> role.getCode().equals(roleCode));
-    }
-
-    /**
-     * 检查用户是否具有指定权限（通过角色继承）
-     *
-     * @param permissionCode 权限编码
-     * @return 是否具有该权限
-     */
-    public boolean hasPermission(String permissionCode) {
-        if (roles == null) {
-            return false;
-        }
-        return roles.stream()
-                .anyMatch(role -> role.hasPermission(permissionCode));
     }
 
     /**
@@ -154,11 +103,11 @@ public class User {
     }
 
     /**
-     * 判断用户是否启用
+     * 检查用户是否启用
      *
-     * @return 是否启用
+     * @return true-启用，false-禁用
      */
     public boolean isEnabled() {
-        return this.status != null && this.status == UserStatus.ENABLED;
+        return this.status == UserStatus.ENABLED;
     }
 }

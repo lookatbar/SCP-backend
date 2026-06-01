@@ -1,10 +1,12 @@
 package com.lookatbar.scp.basicdata.infrastructure.persistence.repository;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.lookatbar.scp.basicdata.domain.model.user.User;
 import com.lookatbar.scp.basicdata.domain.model.user.UserStatus;
 import com.lookatbar.scp.basicdata.domain.repository.UserRepository;
 import com.lookatbar.scp.basicdata.infrastructure.persistence.mapper.UserMapper;
 import com.lookatbar.scp.basicdata.infrastructure.persistence.po.UserPO;
+import com.lookatbar.scp.basicdata.infrastructure.util.BeanConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 /**
  * 用户仓储实现类
  * 基于MyBatis Plus实现用户数据访问，负责领域模型与持久化对象的转换
+ * 使用 BeanConverter 简化对象转换逻辑
  */
 @Repository
 @RequiredArgsConstructor
@@ -156,41 +159,36 @@ public class UserRepositoryImpl implements UserRepository {
 
     /**
      * 将领域模型转换为持久化对象
+     * 使用 BeanConverter 进行属性复制，简化代码
      *
      * @param user 用户领域模型
      * @return 用户持久化对象
      */
     private UserPO toPO(User user) {
-        return UserPO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .realName(user.getRealName())
-                .status(user.getStatus() != null ? user.getStatus().getCode() : null)
-                .createdTime(user.getCreatedTime())
-                .updatedTime(user.getModifiedTime())
-                .build();
+        UserPO po = BeanConverter.convert(user, UserPO.class);
+        // 处理枚举类型转换
+        if (user.getStatus() != null) {
+            po.setStatus(user.getStatus().getCode());
+        }
+        return po;
     }
 
     /**
      * 将持久化对象转换为领域模型
+     * 使用 BeanConverter 进行属性复制，简化代码
      *
      * @param po 用户持久化对象
      * @return 用户领域模型
      */
     private User toDomain(UserPO po) {
-        return User.builder()
-                .id(po.getId())
-                .username(po.getUsername())
-                .password(po.getPassword())
-                .email(po.getEmail())
-                .phone(po.getPhone())
-                .realName(po.getRealName())
-                .status(po.getStatus() != null ? UserStatus.fromCode(po.getStatus()) : null)
-                .createdTime(po.getCreatedTime())
-                .updatedTime(po.getModifiedTime())
-                .build();
+        if (po == null) {
+            return null;
+        }
+        User user = BeanConverter.convert(po, User.class);
+        // 处理枚举类型转换
+        if (po.getStatus() != null) {
+            user.setStatus(UserStatus.fromCode(po.getStatus()));
+        }
+        return user;
     }
 }

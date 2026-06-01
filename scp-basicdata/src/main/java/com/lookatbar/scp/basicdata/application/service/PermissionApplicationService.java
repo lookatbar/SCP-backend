@@ -6,6 +6,7 @@ import com.lookatbar.scp.basicdata.application.dto.PermissionDTO;
 import com.lookatbar.scp.basicdata.application.dto.PermissionUpdateDTO;
 import com.lookatbar.scp.basicdata.domain.model.permission.Permission;
 import com.lookatbar.scp.basicdata.domain.repository.PermissionRepository;
+import com.lookatbar.scp.basicdata.domain.service.AuditService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,11 @@ public class PermissionApplicationService {
     private final PermissionAssembler permissionAssembler;
 
     /**
+     * 审计字段处理服务
+     */
+    private final AuditService auditService;
+
+    /**
      * 创建权限
      * 
      * @param dto 权限创建请求DTO
@@ -41,6 +47,7 @@ public class PermissionApplicationService {
     @Transactional
     public PermissionDTO createPermission(PermissionCreateDTO dto) {
         Permission permission = permissionAssembler.toDomain(dto);
+        auditService.setCreateInfo(permission, dto.getCreatedBy());
         Permission savedPermission = permissionRepository.save(permission);
         return permissionAssembler.toDTO(savedPermission);
     }
@@ -55,6 +62,7 @@ public class PermissionApplicationService {
     @Transactional
     public PermissionDTO updatePermission(String id, PermissionUpdateDTO dto) {
         Permission permission = permissionAssembler.toDomain(id, dto);
+        auditService.setUpdateInfo(permission, dto.getModifiedBy());
         Permission updatedPermission = permissionRepository.save(permission);
         return permissionAssembler.toDTO(updatedPermission);
     }

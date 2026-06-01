@@ -34,4 +34,9 @@ public class RoleCreateDTO {
      * 角色描述
      */
     private String description;
+
+    /**
+     * 创建者ID（可选，不传则从上下文获取）
+     */
+    private String createdBy;
 }
